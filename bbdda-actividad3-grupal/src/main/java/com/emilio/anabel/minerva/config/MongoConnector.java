@@ -5,11 +5,15 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Clase que realiza la conexión con la base de datos MongoDB.
+ *
+ * @version 1.0 - 2025-01-19
+ * @author Emilio, Anabel, Minerva
+ */
 @Slf4j
 public class MongoConnector {
 
-    private static final String MONGO_URI     = System.getenv("MONGO_URI");
-    private static final String DATABASE_NAME = System.getenv("MONGO_DB_NAME");
     private static final String DB_NAME       = System.getenv("MONGO_DB_NAME");
     private static final String DB_HOST       = System.getenv("MONGO_DB_HOST");
     private static final String DB_USER       = System.getenv("MONGO_DB_USER");
@@ -23,9 +27,7 @@ public class MongoConnector {
 
     public MongoConnector() {
         try {
-            // Crear cliente MongoDB usando la URI de conexión
             mongoClient = MongoClients.create(DB_URL);
-            // Obtener la base de datos
             database = mongoClient.getDatabase(DB_NAME);
             log.info("Connection established with MongoDB.");
         } catch (Exception e) {
@@ -52,13 +54,4 @@ public class MongoConnector {
             log.info("Gestión de MongoDB finalizada.");
         }
     }
-
-    //TEST CODE:
-/*
-    MongoConnector mongoConnector = new MongoConnector();
-    MongoDatabase MongoDatabase = mongoConnector.getDatabase();
-    System.out.println(MongoDatabase.getName() + " CONECTADA!! TIRII TIRIIIIII");
-    mongoConnector.closeConnection();
-*/
-
 }

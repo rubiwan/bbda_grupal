@@ -28,7 +28,9 @@ public class MongoWrite {
     // Metodo para insertar archivos JSON en MongoDB en lotes
     public static void insertarJsonEnBatches(String folderPath, String collectionName) throws LogicException, PersistenceException {
         // conexion a singleton
-        MongoDatabase database = MongoConnector.getInstance().getDatabase();
+
+        MongoConnector mongoConnector = new MongoConnector();
+        MongoDatabase database = mongoConnector.getDatabase();
         MongoCollection<Document> collection = database.getCollection(collectionName);
 
         File folder = new File(folderPath);

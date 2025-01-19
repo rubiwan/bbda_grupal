@@ -1,5 +1,6 @@
 package app;
 
+import com.emilio.anabel.minerva.config.MongoConnector;
 import com.emilio.anabel.minerva.config.MysqlConnector;
 import com.emilio.anabel.minerva.config.constants.MongoCollection;
 import com.emilio.anabel.minerva.exception.LogicException;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.sql.Connection;
 import java.util.List;
 
+import com.mongodb.client.MongoDatabase;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -58,6 +60,7 @@ public class Main {
                 new Main(connection);
                 insertAll();
                 selectAll();
+                insertAllJson();
             } catch (Exception e) {
                 System.out.println("Error al inicializar el sistema: " + e.getMessage());
                 log.error("Error al inicializar el sistema", e);
@@ -117,12 +120,16 @@ public class Main {
         try {
             //lista de colecciones de enum MongoCollection
             //menuda fumada de codigo
-            List<MongoCollection> collections = Arrays.asList(MongoCollection.values());
+            /*List<MongoCollection> collections = Arrays.asList(MongoCollection.values());
             for (MongoCollection collection : collections) {
                 String collectionName = collection.getCollection();
                 String folderPath = FOLDER_PATH + File.separator + collectionName;
                 gestorJDBC.insertAllJson(folderPath, collectionName);
-            }
+            }*/
+            String collectionName = "empresas";
+            String folderPath = FOLDER_PATH + File.separator + collectionName;
+            gestorJDBC.insertAllJson(folderPath, collectionName);
+
         } catch (PersistenceException | LogicException e) {
             log.error("Error al insertar los datos", e);
             System.out.println("Error al insertar los datos: " + e.getMessage());
