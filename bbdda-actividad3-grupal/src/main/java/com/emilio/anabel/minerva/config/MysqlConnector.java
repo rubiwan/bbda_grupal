@@ -1,4 +1,4 @@
-package com.emilio.anabel.minerva.util;
+package com.emilio.anabel.minerva.config;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,30 +22,40 @@ public class MysqlConnector {
     private static final String DB_URL      = "jdbc:mysql://" + DB_HOST + ":" + DB_PORT + "/" + DB_NAME;
     private static final String DB_DRIVER   = "com.mysql.cj.jdbc.Driver";
 
-    private Connection connection;
+    private final Connection connection;
+
+    public MysqlConnector() throws SQLException {
+        //creamos la conexion a la base de datos
+        try {
+            Class.forName(DB_DRIVER);
+            this.connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            log.info("Connection established with MySQL database.");
+        } catch (SQLException | ClassNotFoundException e) {
+            log.error("Error conectando en la base de datos", e);
+            throw new RuntimeException("Error conectando en la base de datos", e);
+        }
+    }
 
     /**
-     * Constructor de la clase. Se conecta a la base de datos.
-     *
-     * @param setConnection : boolean
+     * Devuelve la conexión a la base de datos.
+     * @return : connection
      */
+    public Connection getConnection() {
+        return this.connection;
+    }
+
+    /*
+
     public MysqlConnector(boolean setConnection) {
         if (setConnection) connect();
     }
 
-    /**
-     * Constructor de la clase. Se conecta a la base de datos.
-     *
-     * @param columnsList : List<String>
-     * @param setConnection : boolean
-     */
+
     public MysqlConnector(List<String> columnsList, boolean setConnection) {
         if (setConnection) connect();
     }
-
-    /**
-     * Constructor de la clase. Se conecta a la base de datos.
-     */
+*/
+    /*
     public void connect() {
         try {
             Class.forName(DB_DRIVER);
@@ -55,6 +65,7 @@ public class MysqlConnector {
             log.error("Error connecting to the database", e);
         }
     }
+*/
 
    /**
      * Method for executing a SELECT query
@@ -241,9 +252,6 @@ public class MysqlConnector {
         return query.toString();
     }
 
-    public Connection getConnection() {
-        return connection;
-    }
 }
 
 

@@ -1,11 +1,11 @@
-package com.emilio.anabel.minerva.dao;
+package com.emilio.anabel.minerva.persistence;
 
-import com.emilio.anabel.minerva.util.MysqlConnector;
+import com.emilio.anabel.minerva.config.MysqlConnector;
+import com.emilio.anabel.minerva.dao.IReadDao;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
-
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -21,7 +21,13 @@ import java.sql.Statement;
  * @author Emilio, Anabel, Minerva
  */
 @Slf4j
-public class MysqlReadDAO {
+public class JDBC_ReadDao implements IReadDao {
+
+    private final Connection connection;
+
+    public JDBC_ReadDao(Connection connection) {
+        this.connection = connection;
+    }
 
 
     /**
@@ -29,11 +35,10 @@ public class MysqlReadDAO {
      *
      * @param query : String
      */
-    public static void selectEstaciones(String query) {
-        MysqlConnector db = new MysqlConnector(true);
+    @Override
+    public void selectEstaciones(String query) {
 
-        try (Connection connection = db.getConnection();
-             Statement stmt = connection.createStatement();
+        try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             Gson gson = new Gson();
@@ -56,8 +61,6 @@ public class MysqlReadDAO {
 
         } catch (SQLException e) {
             log.error("Error en acceso a la base de datos: {}", query, e);
-        } finally {
-            db.close();
         }
     }
 
@@ -66,10 +69,11 @@ public class MysqlReadDAO {
      *
      * @param query : String
      */
-    public static void selectPetroleras(String query) {
-        MysqlConnector db = new MysqlConnector(true);
+    @Override
+    public void selectPetroleras(String query) {
 
-        try (ResultSet rs = db.select(query)) {
+       try (Statement stmt = connection.createStatement();
+                  ResultSet rs = stmt.executeQuery(query))  {
 
             Gson gson = new Gson();
 
@@ -88,10 +92,8 @@ public class MysqlReadDAO {
                 log.info("JSON creado: {}", fileName);
             }
         } catch (SQLException e) {
-            log.error("Error en acceso a la base de datos: {}", query, e);
-        } finally {
-            db.close();
-        }
+           log.error("Error en acceso a la base de datos: {}", query, e);
+       }
     }
 
     /**
@@ -99,11 +101,11 @@ public class MysqlReadDAO {
      *
      * @param carburantesQuery : String
      */
-    public static void selectCarburantes(String carburantesQuery) {
+    @Override
+    public void selectCarburantes(String carburantesQuery) {
 
-        MysqlConnector db = new MysqlConnector(true);
-
-        try (ResultSet rs = db.select(carburantesQuery)) {
+        try (Statement stmt = connection.createStatement();
+              ResultSet rs = stmt.executeQuery(carburantesQuery)) {
 
             Gson gson = new Gson();
 
@@ -123,15 +125,15 @@ public class MysqlReadDAO {
             }
         } catch (SQLException e) {
             log.error("Error en acceso a la base de datos: {}", carburantesQuery, e);
-        } finally {
-            db.close();
         }
     }
 
-    public static void selectPreciosCarburantes(String preciosCarburantesQuery) {
+    @Override
+    public void selectPreciosCarburantes(String preciosCarburantesQuery) {
     }
 
-    public static void selectUbicaciones(String ubicacionesQuery) {
+    @Override
+    public void selectUbicaciones(String ubicacionesQuery) {
     }
 
     /**
@@ -142,7 +144,8 @@ public class MysqlReadDAO {
      * @return JsonObject
      * @throws SQLException : cuando hay un error en el acceso a la base de datos
      */
-    private static JsonObject buildStationJson(ResultSet rs, Gson gson) throws SQLException {
+    @Override
+    public JsonObject buildStationJson(ResultSet rs, Gson gson) throws SQLException {
         JsonObject estacion = new JsonObject();
         estacion.addProperty("id_estacion", rs.getString("id_estacion"));
         estacion.addProperty("tipo_estacion", rs.getString("tipo_estacion"));
@@ -189,7 +192,8 @@ public class MysqlReadDAO {
      * @return JsonObject
      * @throws SQLException : cuando hay un error en el acceso a la base de datos
      */
-    private static JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws SQLException {
+    @Override
+    public JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws SQLException {
         JsonObject petrolera = new JsonObject();
         petrolera.addProperty("id_empresa", rs.getString("id_empresa"));
         petrolera.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
@@ -205,16 +209,19 @@ public class MysqlReadDAO {
         return petrolera;
     }
 
-    private static JsonObject buildCarburanteJson(ResultSet rs, Gson gson) {
+    @Override
+    public JsonObject buildCarburanteJson(ResultSet rs, Gson gson) {
         return null;
     }
 
+    @Override
     // precio_carburante
-    private static JsonObject buildPrecioCarburanteJson(ResultSet rs, Gson gson) {
+    public JsonObject buildPrecioCarburanteJson(ResultSet rs, Gson gson) {
         return null;
     }
 
-    private static JsonObject buildUbicacionJson(ResultSet rs, Gson gson) {
+    @Override
+    public JsonObject buildUbicacionJson(ResultSet rs, Gson gson) {
         return null;
     }
 
@@ -224,7 +231,8 @@ public class MysqlReadDAO {
      * @param jsonObject : JsonObject
      * @param fileName : String
      */
-    private static void writeJsonToFile(JsonObject jsonObject, String fileName) {
+    @Override
+    public void writeJsonToFile(JsonObject jsonObject, String fileName) {
         try (FileWriter writer = new FileWriter(fileName)) {
             new Gson().toJson(jsonObject, writer);
         } catch (IOException e) {

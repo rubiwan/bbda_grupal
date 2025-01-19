@@ -1,6 +1,6 @@
 package app.read;
 
-import com.emilio.anabel.minerva.dao.MysqlReadDAO;
+import com.emilio.anabel.minerva.dao.IReadDao;
 
 public class MysqlRead {
 
@@ -93,11 +93,11 @@ public class MysqlRead {
         LEFT JOIN provincia p ON m.id_provincia = p.id_provincia;
         """;
 
-        MysqlReadDAO.selectEstaciones(estacionesQuery);
-        MysqlReadDAO.selectPetroleras(petrolerasQuery);
-        MysqlReadDAO.selectCarburantes(carburantesQuery);
-        MysqlReadDAO.selectPreciosCarburantes(preciosCarburantesQuery);
-        MysqlReadDAO.selectUbicaciones(ubicacionesQuery);
+        IReadDao.selectEstaciones(estacionesQuery);
+        IReadDao.selectPetroleras(petrolerasQuery);
+        IReadDao.selectCarburantes(carburantesQuery);
+        IReadDao.selectPreciosCarburantes(preciosCarburantesQuery);
+        IReadDao.selectUbicaciones(ubicacionesQuery);
 
 
     }

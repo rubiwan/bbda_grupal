@@ -1,4 +1,4 @@
-package com.emilio.anabel.minerva.util.constants;
+package com.emilio.anabel.minerva.config.constants;
 
 import java.util.List;
 

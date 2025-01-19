@@ -1,4 +1,4 @@
-package com.emilio.anabel.minerva.model;
+package com.emilio.anabel.minerva.persistence;
 
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author Emilio, Anabel, Minerva
  */
 @Slf4j
-public final class CSVExtractor {
+public final class GestorCSV {
 
 
     /**

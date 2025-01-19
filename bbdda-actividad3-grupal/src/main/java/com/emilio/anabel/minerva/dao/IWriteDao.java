@@ -1,15 +1,15 @@
 package com.emilio.anabel.minerva.dao;
 
-import com.emilio.anabel.minerva.util.MysqlConnector;
+import com.emilio.anabel.minerva.config.MysqlConnector;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MysqlWriteDAO {
+public class IWriteDao {
 
-    private  MysqlWriteDAO() {};
+    private IWriteDao() {};
 
     public static void insert(ArrayList<String[]> rowsValuesArray, String tableName, List<String> columnsList) {
         MysqlConnector db = new MysqlConnector(columnsList, true);
