@@ -1,12 +1,16 @@
 package app;
 
-import com.emilio.anabel.minerva.config.GestorConnectors;
 import com.emilio.anabel.minerva.config.MysqlConnector;
+import com.emilio.anabel.minerva.config.constants.MongoCollection;
 import com.emilio.anabel.minerva.exception.LogicException;
 import com.emilio.anabel.minerva.exception.PersistenceException;
 import com.emilio.anabel.minerva.persistence.GestorJDBC;
 
+import java.io.File;
+import java.util.Arrays;
 import java.sql.Connection;
+import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,6 +32,7 @@ public class Main {
         // 4.pruebas
 
     private static GestorJDBC gestorJDBC;
+    private static final String FOLDER_PATH = "src/main/resources/json";
 
 
     /**
@@ -103,6 +108,25 @@ public class Main {
         try{
             gestorJDBC.insertAll();
         } catch (PersistenceException | LogicException e) {
+            log.error("Error al insertar los datos", e);
+            System.out.println("Error al insertar los datos: " + e.getMessage());
+        }
+    }
+
+    private static void insertAllJson(){
+        try {
+            //lista de colecciones de enum MongoCollection
+            //menuda fumada de codigo
+            List<MongoCollection> collections = Arrays.asList(MongoCollection.values());
+            for (MongoCollection collection : collections) {
+                String collectionName = collection.getCollection();
+                String folderPath = FOLDER_PATH + File.separator + collectionName;
+                gestorJDBC.insertAllJson(folderPath, collectionName);
+            }
+        } catch (PersistenceException | LogicException e) {
+            log.error("Error al insertar los datos", e);
+            System.out.println("Error al insertar los datos: " + e.getMessage());
+        } catch (Exception e) {
             log.error("Error al insertar los datos", e);
             System.out.println("Error al insertar los datos: " + e.getMessage());
         }

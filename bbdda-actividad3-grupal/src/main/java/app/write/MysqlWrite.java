@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
 
 
 /**
@@ -21,7 +20,6 @@ import org.slf4j.Logger;
  * @version 1.0 - 2025-01-17
  * @autor Emilio, Anabel, Minerva
  */
-@Slf4j
 public class MysqlWrite {
 
     private final JDBC_WriteDao jdbcWriteDao;
