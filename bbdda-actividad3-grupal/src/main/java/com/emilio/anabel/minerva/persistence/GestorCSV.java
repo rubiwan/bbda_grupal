@@ -1,5 +1,6 @@
 package com.emilio.anabel.minerva.persistence;
 
+import com.emilio.anabel.minerva.exception.LogicException;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
@@ -26,8 +27,9 @@ public final class GestorCSV {
      *
      * @param fileName : String
      * @return ArrayList<String [ ]>
+     * @throws LogicException : cuando se produce un error en la lectura del archivo.
      */
-    public static ArrayList<String[]> readCSV(String fileName) {
+    public static ArrayList<String[]> readCSV(String fileName) throws LogicException {
         String filePath = "src/main/resources/csv/" + fileName;
 
         try (com.opencsv.CSVReader reader = new CSVReaderBuilder(new FileReader(filePath))
@@ -44,7 +46,7 @@ public final class GestorCSV {
 
         } catch (IOException | CsvException e) {
             log.error("Error en la lectura del: {}", fileName, e);
-            return null;
+            throw new LogicException("Error en la lectura del archivo: " + fileName, e);
         }
     }
 }

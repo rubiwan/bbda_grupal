@@ -9,7 +9,7 @@ import java.util.List;
  * Interfaz que define los métodos para realizar operaciones de escritura en la base de datos.
  *
  * @version 1.0 - 2025-01-17
- * @autor Emilio, Anabel, Minerva
+ * @author Emilio, Anabel, Minerva
  */
 public interface IWriteDao {
 

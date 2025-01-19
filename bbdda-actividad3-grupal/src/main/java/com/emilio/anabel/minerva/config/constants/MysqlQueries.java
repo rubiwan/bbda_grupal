@@ -1,14 +1,17 @@
-package app.read;
+package com.emilio.anabel.minerva.config.constants;
 
-import com.emilio.anabel.minerva.dao.IReadDao;
+import lombok.Getter;
 
-public class MysqlRead {
+/**
+ * Enumerado con las consultas SQL para la base de datos MySQL
+ *
+ * @version 1.0 2025/01/18
+ * @author Emilio, Anabel, Minerva
+ */
+@Getter
+public enum MysqlQueries {
 
-    private MysqlRead() {}
-
-    public static void selectEstaciones() {
-
-        String estacionesQuery = """
+    SELECT_ESTACIONES("""
         SELECT
             e.id_estacion,
             e.tipo_estacion,
@@ -44,9 +47,9 @@ public class MysqlRead {
         WHERE
             e.tipo_estacion IN ('Terrestre', 'Maritima')
         ORDER BY e.id_estacion;
-        """;
+        """),
 
-        String petrolerasQuery = """
+    SELECT_PETROLERAS("""
         SELECT
             emp.id_empresa,
             emp.nombre_empresa,
@@ -54,17 +57,17 @@ public class MysqlRead {
         FROM
             empresa emp
         LEFT JOIN estacion e ON e.id_empresa = emp.id_empresa;
-        """;
+        """),
 
-        String carburantesQuery = """
+    SELECT_CARBURANTES("""
         SELECT
             c.id_carburante,
             c.tipo_carburante
         FROM
             carburante c;
-        """;
+        """),
 
-        String preciosCarburantesQuery = """
+    SELECT_PRECIOS_CARBURANTES("""
         SELECT
             pc.id_estacion,
             pc.id_carburante,
@@ -73,9 +76,9 @@ public class MysqlRead {
         FROM
             precio_carburante pc
         ORDER BY pc.id_estacion, pc.id_carburante;
-        """;
+        """),
 
-        String ubicacionesQuery = """
+    SELECT_UBICACIONES("""
         SELECT
             cp.id_codigo_postal,
             cp.numero_codigo_postal,
@@ -91,14 +94,17 @@ public class MysqlRead {
         LEFT JOIN localidad l ON rcl.id_localidad = l.id_localidad
         LEFT JOIN municipio m ON cp.id_municipio = m.id_municipio
         LEFT JOIN provincia p ON m.id_provincia = p.id_provincia;
-        """;
+        """);
 
-        //IReadDao.selectEstaciones(estacionesQuery);
-        //IReadDao.selectPetroleras(petrolerasQuery);
-        //IReadDao.selectCarburantes(carburantesQuery);
-        //IReadDao.selectPreciosCarburantes(preciosCarburantesQuery);
-        //IReadDao.selectUbicaciones(ubicacionesQuery);
+    private final String query;
 
-
+    /**
+     * Constructor
+     *
+     * @param query : String
+     */
+    MysqlQueries(String query) {
+        this.query = query;
     }
+
 }

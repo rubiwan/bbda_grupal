@@ -1,19 +1,11 @@
 package com.emilio.anabel.minerva.dao;
 
-import com.emilio.anabel.minerva.config.MysqlConnector;
 import com.emilio.anabel.minerva.exception.PersistenceException;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import lombok.extern.slf4j.Slf4j;
 
-
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
 
 /**
  * Interfaz que define los métodos para realizar consultas a la base de datos.

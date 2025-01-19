@@ -2,6 +2,13 @@ package com.emilio.anabel.minerva.config.constants;
 
 import java.util.List;
 
+/**
+ * Clase que contiene los nombres de las columnas de las tablas de la base de datos.
+ * Se utiliza para evitar errores de escritura en las consultas SQL.
+ *
+ * @version 1.0.0 - 2025/01/10
+ * @author Emilio, Anabel, Minerva
+ */
 public class MysqlColumns {
 
     // Bases de datos

@@ -1,6 +1,7 @@
 package app.write;
 
 
+import com.emilio.anabel.minerva.exception.LogicException;
 import com.emilio.anabel.minerva.exception.PersistenceException;
 import com.emilio.anabel.minerva.persistence.GestorCSV;
 import com.emilio.anabel.minerva.persistence.JDBC_WriteDao;
@@ -10,8 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  * Clase que inserta los datos de los archivos CSV en la base de datos MySQL.
@@ -19,9 +21,9 @@ import org.slf4j.LoggerFactory;
  * @version 1.0 - 2025-01-17
  * @autor Emilio, Anabel, Minerva
  */
+@Slf4j
 public class MysqlWrite {
 
-    private static final Logger log = LoggerFactory.getLogger(MysqlWrite.class);
     private final JDBC_WriteDao jdbcWriteDao;
 
     private static final String EMPRESA_TABLE = "empresa";
@@ -42,12 +44,14 @@ public class MysqlWrite {
         this.jdbcWriteDao = jdbcWriteDao;
     }
 
+
+
     /**
      * Inserta los datos de los archivos CSV en la base de datos.
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void insertEmpresas() throws PersistenceException {
+    public void insertEmpresas() throws PersistenceException, LogicException {
         insertFromCSV("empresas.csv", EMPRESA_TABLE, List.of(NOMBRE_EMPRESA_COLUMN));
     }
 
@@ -56,7 +60,7 @@ public class MysqlWrite {
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void insertCarburantes() throws PersistenceException {
+    public void insertCarburantes() throws PersistenceException, LogicException {
         insertFromCSV("carburantes.csv", CARBURANTE_TABLE, List.of(TIPO_CARBURANTE_COLUMN));
     }
 
@@ -65,7 +69,7 @@ public class MysqlWrite {
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void insertMunicipios() throws PersistenceException {
+    public void insertMunicipios() throws PersistenceException, LogicException {
         Map<String, Integer> provinciasMap = buildIdMap(
                 jdbcWriteDao.select(PROVINCIA_TABLE, PROVINCIA_COLUMNS), 1, 0);
 
@@ -80,7 +84,7 @@ public class MysqlWrite {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     private void insertFromCSV(String csvFile, String table, List<String> columns)
-            throws PersistenceException {
+            throws PersistenceException, LogicException {
         ArrayList<String[]> rows = readCSV(csvFile);
         jdbcWriteDao.insert(rows, table, columns);
     }
@@ -120,7 +124,7 @@ public class MysqlWrite {
      * @param fileName : String
      * @return ArrayList<String [ ]>
      */
-    private ArrayList<String[]> readCSV(String fileName) {
+    private ArrayList<String[]> readCSV(String fileName) throws LogicException {
         return GestorCSV.readCSV(fileName);
     }
 }
