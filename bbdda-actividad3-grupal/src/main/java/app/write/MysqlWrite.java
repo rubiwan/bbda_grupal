@@ -1,147 +1,127 @@
 package app.write;
 
-import com.emilio.anabel.minerva.dao.IWriteDao;
+
+import com.emilio.anabel.minerva.exception.PersistenceException;
+import com.emilio.anabel.minerva.persistence.GestorCSV;
+import com.emilio.anabel.minerva.persistence.JDBC_WriteDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.emilio.anabel.minerva.persistence.GestorCSV.readCSV;
-import static com.emilio.anabel.minerva.config.constants.MysqlColumns.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * Clase que inserta los datos de los archivos CSV en la base de datos MySQL.
+ *
+ * @version 1.0 - 2025-01-17
+ * @autor Emilio, Anabel, Minerva
+ */
 public class MysqlWrite {
 
-    private MysqlWrite() {}
+    private static final Logger log = LoggerFactory.getLogger(MysqlWrite.class);
+    private final JDBC_WriteDao jdbcWriteDao;
 
-    public static void insertEmpresas() {
-        IWriteDao.insert(readCSV("empresas.csv"), EMPRESA_TABLE, List.of(NOMBRE_EMPRESA_COLUMN));
+    private static final String EMPRESA_TABLE = "empresa";
+    private static final String NOMBRE_EMPRESA_COLUMN = "nombre_empresa";
+    private static final String CARBURANTE_TABLE = "carburante";
+    private static final String TIPO_CARBURANTE_COLUMN = "tipo_carburante";
+    private static final String MUNICIPIO_TABLE = "municipio";
+    private static final List<String> MUNICIPIO_COLUMNS = List.of("id_provincia", "nombre_municipio");
+    private static final String PROVINCIA_TABLE = "provincia";
+    private static final List<String> PROVINCIA_COLUMNS = List.of("id", "nombre_provincia");
+
+    /**
+     * Constructor que recibe un objeto JDBC_WriteDao.
+     *
+     * @param jdbcWriteDao : JDBC_WriteDao
+     */
+    public MysqlWrite(JDBC_WriteDao jdbcWriteDao) {
+        this.jdbcWriteDao = jdbcWriteDao;
     }
 
-    public static void insertCarburantes() {
-        IWriteDao.insert(readCSV("carburantes.csv"), CARBURANTE_TABLE, List.of(TIPO_CARBURANTE_COLUMN));
+    /**
+     * Inserta los datos de los archivos CSV en la base de datos.
+     *
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    public void insertEmpresas() throws PersistenceException {
+        insertFromCSV("empresas.csv", EMPRESA_TABLE, List.of(NOMBRE_EMPRESA_COLUMN));
     }
 
-    public static void insertProvincias() {
-        IWriteDao.insert(readCSV("provincias.csv"), PROVINCIA_TABLE, List.of(NOMBRE_PROVINCIA_COLUMN));
+    /**
+     * Inserta los datos de los archivos CSV en la base de datos.
+     *
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    public void insertCarburantes() throws PersistenceException {
+        insertFromCSV("carburantes.csv", CARBURANTE_TABLE, List.of(TIPO_CARBURANTE_COLUMN));
     }
 
-    public static void insertLocalidades() {
-        IWriteDao.insert(readCSV("localidades.csv"), LOCALIDAD_TABLE, List.of(NOMBRE_LOCALIDAD_COLUMN));
+    /**
+     * Inserta los datos de los archivos CSV en la base de datos.
+     *
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    public void insertMunicipios() throws PersistenceException {
+        Map<String, Integer> provinciasMap = buildIdMap(
+                jdbcWriteDao.select(PROVINCIA_TABLE, PROVINCIA_COLUMNS), 1, 0);
+
+        ArrayList<String[]> municipios = readCSV("municipios.csv");
+        updateColumnsWithMap(municipios, provinciasMap, 0);
+        jdbcWriteDao.insert(municipios, MUNICIPIO_TABLE, MUNICIPIO_COLUMNS);
     }
 
-    public static void insertMunicipios() {
-        ArrayList<String[]> provinciasList = IWriteDao.select(PROVINCIA_TABLE, PROVINCIA_COLUMNS_LIST);
-        ArrayList<String[]> municipiosList = readCSV("municipios.csv");
-        Map<String, Integer> provinciasMap = new HashMap<>();
-
-        for (String[] provincia : provinciasList) {
-            provinciasMap.put(provincia[1], Integer.parseInt(provincia[0]));
-        }
-        assert municipiosList != null;
-        for (String[] valuesAtColumn : municipiosList) {
-            valuesAtColumn[0] = provinciasMap.get(valuesAtColumn[0]).toString();
-        }
-        IWriteDao.insert(municipiosList, MUNICIPIO_TABLE, List.of(ID_PROVINCIA_COLUMN,
-                                                            NOMBRE_MUNICIPIO_COLUMN));
+    /**
+     * Inserta los datos de los archivos CSV en la base de datos.
+     *
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    private void insertFromCSV(String csvFile, String table, List<String> columns)
+            throws PersistenceException {
+        ArrayList<String[]> rows = readCSV(csvFile);
+        jdbcWriteDao.insert(rows, table, columns);
     }
 
-    public static void insertCodigosPostales() {
-        ArrayList<String[]> municipiosList = IWriteDao.select(MUNICIPIO_TABLE, MUNICIPIO_COLUMNS_LIST);
-        ArrayList<String[]> codigosPostalesList = readCSV("codigos_postales.csv");
-        Map<String, Integer> municipiosMap = new HashMap<>();
-
-        for (String[] municipio : municipiosList) {
-            municipiosMap.put(municipio[1], Integer.parseInt(municipio[0]));
+    /**
+     * Construye un mapa con los datos de una lista.
+     *
+     * @param dataList : List<String [ ]>
+     * @param keyIndex : int
+     * @param valueIndex : int
+     * @return Map<String, Integer>
+     */
+    private Map<String, Integer> buildIdMap(List<String[]> dataList, int keyIndex, int valueIndex) {
+        Map<String, Integer> map = new HashMap<>();
+        for (String[] data : dataList) {
+            map.put(data[keyIndex], Integer.parseInt(data[valueIndex]));
         }
-        assert codigosPostalesList != null;
-        for (String[] valuesAtColumn : codigosPostalesList) {
-            valuesAtColumn[0] = municipiosMap.get(valuesAtColumn[0]).toString();
-        }
-        IWriteDao.insert(codigosPostalesList, CODIGO_POSTAL_TABLE, List.of(ID_MUNICIPIO_COLUMN,
-                                                                     NUMERO_CODIGO_POSTAL_COLUMN));
+        return map;
     }
 
-    public static void insertRelacionCpLocalidad() {
-        ArrayList<String[]> codigosPostalesList = IWriteDao.select(CODIGO_POSTAL_TABLE, CODIGO_POSTAL_COLUMNS_LIST);
-        ArrayList<String[]> localidadesList = IWriteDao.select(LOCALIDAD_TABLE, LOCALIDAD_COLUMNS_LIST);
-        ArrayList<String[]> cpLocalidadList = readCSV("relacion_cp_localidad.csv");
-
-        Map<String, Integer> codigosPostalesMap = new HashMap<>();
-        Map<String, Integer> localidadesMap = new HashMap<>();
-
-        for (String[] codigoPostal : codigosPostalesList) {
-            codigosPostalesMap.put(codigoPostal[1], Integer.parseInt(codigoPostal[0]));
+    /**
+     * Actualiza las columnas de una lista con los valores de un mapa.
+     *
+     * @param rows : List<String [ ]>
+     * @param map : Map<String, Integer>
+     * @param columnIndex : int
+     */
+    private void updateColumnsWithMap(List<String[]> rows, Map<String, Integer> map, int columnIndex) {
+        for (String[] row : rows) {
+            row[columnIndex] = map.getOrDefault(row[columnIndex], -1).toString();
         }
-
-        for (String[] localidad : localidadesList) {
-            localidadesMap.put(localidad[1], Integer.parseInt(localidad[0]));
-        }
-
-        assert cpLocalidadList != null;
-        for (String[] valuesAtColumn : cpLocalidadList) {
-            valuesAtColumn[0] = codigosPostalesMap.get(valuesAtColumn[0]).toString();
-            valuesAtColumn[1] = localidadesMap.get(valuesAtColumn[1]).toString();
-        }
-        IWriteDao.insert(cpLocalidadList, CP_LOCALIDAD_TABLE, CP_LOCALIDAD_COLUMNS_LIST);
     }
 
-    public static void insertEstaciones() {
-        ArrayList<String[]> localidadesList = IWriteDao.select(LOCALIDAD_TABLE, LOCALIDAD_COLUMNS_LIST);
-        ArrayList<String[]> empresasList = IWriteDao.select(EMPRESA_TABLE, EMPRESA_COLUMNS_LIST);
-        ArrayList<String[]> estacionesList = readCSV("estaciones.csv");
-
-        Map<String, Integer> localidadesMap = new HashMap<>();
-        Map<String, Integer> empresasMap = new HashMap<>();
-
-        for (String[] localidad : localidadesList) {
-            localidadesMap.put(localidad[1], Integer.parseInt(localidad[0]));
-        }
-
-        for (String[] empresa : empresasList) {
-            empresasMap.put(empresa[1], Integer.parseInt(empresa[0]));
-        }
-
-        assert estacionesList != null;
-        for (String[] valuesAtColumn : estacionesList) {
-            valuesAtColumn[6] = localidadesMap.get(valuesAtColumn[6]).toString();
-            valuesAtColumn[7] = empresasMap.get(valuesAtColumn[7]).toString();
-        }
-        IWriteDao.insert(estacionesList, ESTACION_TABLE, List.of( DIRECCION_ESTACION_COLUMN,
-                                                            MARGEN_ESTACION_COLUMN,
-                                                            TIPO_ESTACION_COLUMN,
-                                                            HORARIO_ESTACION_COLUMN,
-                                                            LATITUD_ESTACION_COLUMN,
-                                                            LONGITUD_ESTACION_COLUMN,
-                                                            ID_LOCALIDAD_COLUMN,
-                                                            ID_EMPRESA_COLUMN));
-    }
-
-    public static void insertPrecioCarburante() {
-
-        ArrayList<String[]> carburantesList = IWriteDao.select(CARBURANTE_TABLE, CARBURANTE_COLUMNS_LIST);
-        ArrayList<String[]> estacionesList = IWriteDao.select(ESTACION_TABLE, ESTACION_COLUMNS_LIST);
-        ArrayList<String[]> precioCarburantesList = readCSV("precio_carburantes.csv");
-
-        Map<String, Integer> carburantesMap = new HashMap<>();
-        Map<String, Integer> estacionesMap = new HashMap<>();
-
-        for (String[] carburantes : carburantesList) {
-            carburantesMap.put(carburantes[1], Integer.parseInt(carburantes[0]));
-        }
-
-        for (String[] estaciones : estacionesList) {
-            estacionesMap.put(estaciones[1], Integer.parseInt(estaciones[0]));
-        }
-
-        assert precioCarburantesList != null;
-        for (String[] valuesAtColumn : precioCarburantesList) {
-            valuesAtColumn[2] = carburantesMap.get(valuesAtColumn[2]).toString();
-            valuesAtColumn[3] = estacionesMap.get(valuesAtColumn[3]).toString();
-        }
-        IWriteDao.insert(precioCarburantesList, PRECIO_TABLE, List.of(PRECIO_COLUMN,
-                                                                FECHA_ACT_PRECIO_COLUMN,
-                                                                ID_CARBURANTE_COLUMN,
-                                                                ID_ESTACION_COLUMN));
+    /**
+     * Lee un archivo CSV y devuelve una lista con los valores de cada fila.
+     *
+     * @param fileName : String
+     * @return ArrayList<String [ ]>
+     */
+    private ArrayList<String[]> readCSV(String fileName) {
+        return GestorCSV.readCSV(fileName);
     }
 }
+

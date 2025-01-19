@@ -93,11 +93,11 @@ public class MysqlRead {
         LEFT JOIN provincia p ON m.id_provincia = p.id_provincia;
         """;
 
-        IReadDao.selectEstaciones(estacionesQuery);
-        IReadDao.selectPetroleras(petrolerasQuery);
-        IReadDao.selectCarburantes(carburantesQuery);
-        IReadDao.selectPreciosCarburantes(preciosCarburantesQuery);
-        IReadDao.selectUbicaciones(ubicacionesQuery);
+        //IReadDao.selectEstaciones(estacionesQuery);
+        //IReadDao.selectPetroleras(petrolerasQuery);
+        //IReadDao.selectCarburantes(carburantesQuery);
+        //IReadDao.selectPreciosCarburantes(preciosCarburantesQuery);
+        //IReadDao.selectUbicaciones(ubicacionesQuery);
 
 
     }

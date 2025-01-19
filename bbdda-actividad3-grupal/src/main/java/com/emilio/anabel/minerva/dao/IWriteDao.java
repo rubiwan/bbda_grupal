@@ -1,58 +1,66 @@
 package com.emilio.anabel.minerva.dao;
 
-import com.emilio.anabel.minerva.config.MysqlConnector;
+import com.emilio.anabel.minerva.exception.PersistenceException;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
 import java.util.List;
 
-public class IWriteDao {
+/**
+ * Interfaz que define los métodos para realizar operaciones de escritura en la base de datos.
+ *
+ * @version 1.0 - 2025-01-17
+ * @autor Emilio, Anabel, Minerva
+ */
+public interface IWriteDao {
 
-    private IWriteDao() {};
+    /**
+     * Inserta una lista de filas en una tabla de la base de datos.
+     *
+     * @param rows : List<String []>
+     * @param tableName : String
+     * @param columns : List<String>
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    void insert(List<String[]> rows, String tableName, List<String> columns)
+            throws PersistenceException;
 
-    public static void insert(ArrayList<String[]> rowsValuesArray, String tableName, List<String> columnsList) {
-        MysqlConnector db = new MysqlConnector(columnsList, true);
-        db.update("INSERT INTO " + tableName + " " + db.getInsertString(rowsValuesArray));
-        db.close();
-    }
+    /**
+     * Selecciona todas las filas de una tabla de la base de datos.
+     *
+     * @param tableName : String
+     * @param columns : List<String>
+     * @return List<String [ ]> : lista con los valores de cada fila
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    List<String[]> select(String tableName, List<String> columns) throws PersistenceException;
 
-    public static ArrayList<String[]> select(String tableName, List<String> columnsList) {
-        MysqlConnector db = new MysqlConnector(columnsList, true);
+    /**
+     * Crea una sentencia de inserción para una lista de filas en una tabla de la base de datos.
+     *
+     * @param rows : List<String []>
+     * @param tableName : String
+     * @param columns : List<String>
+     * @return PreparedStatement : sentencia de inserción
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    PreparedStatement createInsertStatement(List<String[]> rows, String tableName,
+                                            List<String> columns) throws PersistenceException;
 
-        try(ResultSet rs = db.select("SELECT " + String.join(", ", columnsList) + " FROM " + tableName)) {
-            ArrayList<String[]> rowsValuesArray = new ArrayList<>();
+    /**
+     * Construye una sentencia SQL de inserción para una tabla de la base de datos.
+     *
+     * @param tableName : String
+     * @param columns : List<String>
+     * @return String : sentencia SQL de inserción
+     */
+    String buildInsertSQL(String tableName, List<String> columns);
 
-            while (rs.next()) {
-                String[] row = new String[columnsList.size()];
-
-                for (int i = 0 ; i < columnsList.size() ; i++) {
-                    row[i] = rs.getString(i+1);
-                }
-                rowsValuesArray.add(row);
-            }
-            return rowsValuesArray;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static void update(String tableName, List<String> columnsList,
-                       ArrayList<String[]> rowsValuesArray, String idRowName,
-                       String id) {
-
-        MysqlConnector db = new MysqlConnector(columnsList, true);
-        db.update(db.getUpdateString(rowsValuesArray, tableName, idRowName, id));
-        db.close();
-    }
-
-    public static void delete(String tableName, List<String> columnsList,
-                       String idRowName, String idToDelete) {
-
-        MysqlConnector db = new MysqlConnector(columnsList, true);
-        db.delete(db.getDeleteString(tableName, idRowName, idToDelete));
-        db.close();
-    }
+    /**
+     * Construye una sentencia SQL de selección para una tabla de la base de datos.
+     *
+     * @param tableName : String
+     * @param columns : List<String>
+     * @return String : sentencia SQL de selección
+     */
+    String buildSelectSQL(String tableName, List<String> columns);
 }

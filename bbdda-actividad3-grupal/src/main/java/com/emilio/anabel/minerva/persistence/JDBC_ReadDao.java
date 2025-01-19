@@ -1,7 +1,8 @@
 package com.emilio.anabel.minerva.persistence;
 
-import com.emilio.anabel.minerva.config.MysqlConnector;
+
 import com.emilio.anabel.minerva.dao.IReadDao;
+import com.emilio.anabel.minerva.exception.PersistenceException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -29,14 +30,13 @@ public class JDBC_ReadDao implements IReadDao {
         this.connection = connection;
     }
 
-
     /**
      * Realiza una consulta a la base de datos para obtener todas las estaciones de servicio.
      *
      * @param query : String
      */
     @Override
-    public void selectEstaciones(String query) {
+    public void selectEstaciones(String query) throws PersistenceException {
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
@@ -61,6 +61,7 @@ public class JDBC_ReadDao implements IReadDao {
 
         } catch (SQLException e) {
             log.error("Error en acceso a la base de datos: {}", query, e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
         }
     }
 
@@ -70,7 +71,7 @@ public class JDBC_ReadDao implements IReadDao {
      * @param query : String
      */
     @Override
-    public void selectPetroleras(String query) {
+    public void selectPetroleras(String query) throws PersistenceException {
 
        try (Statement stmt = connection.createStatement();
                   ResultSet rs = stmt.executeQuery(query))  {
@@ -79,7 +80,8 @@ public class JDBC_ReadDao implements IReadDao {
 
             while (rs.next()) {
                 if (rs.getObject("id_empresa") == null || rs.getObject("nombre_empresa") == null) {
-                    log.warn("Salta la petrolera con id_empresa nulo o nombre_empresa nulo" + rs.getInt("id_empresa"));
+                    log.warn("Salta la petrolera con id_empresa nulo o nombre_empresa nulo"
+                            + rs.getInt("id_empresa"));
                     continue;
                 }
 
@@ -93,6 +95,7 @@ public class JDBC_ReadDao implements IReadDao {
             }
         } catch (SQLException e) {
            log.error("Error en acceso a la base de datos: {}", query, e);
+           throw new PersistenceException("Error en acceso a la base de datos", e);
        }
     }
 
@@ -102,7 +105,7 @@ public class JDBC_ReadDao implements IReadDao {
      * @param carburantesQuery : String
      */
     @Override
-    public void selectCarburantes(String carburantesQuery) {
+    public void selectCarburantes(String carburantesQuery) throws PersistenceException {
 
         try (Statement stmt = connection.createStatement();
               ResultSet rs = stmt.executeQuery(carburantesQuery)) {
@@ -111,7 +114,8 @@ public class JDBC_ReadDao implements IReadDao {
 
             while (rs.next()) {
                 if (rs.getObject("id_carburante") == null || rs.getObject("tipo_carburante") == null) {
-                    log.warn("Salta el carburante con id_carburante nulo o tipo_carburante nulo" + rs.getInt("id_carburante"));
+                    log.warn("Salta el carburante con id_carburante nulo o tipo_carburante nulo"
+                            + rs.getInt("id_carburante"));
                     continue;
                 }
 
@@ -125,15 +129,16 @@ public class JDBC_ReadDao implements IReadDao {
             }
         } catch (SQLException e) {
             log.error("Error en acceso a la base de datos: {}", carburantesQuery, e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
         }
     }
 
     @Override
-    public void selectPreciosCarburantes(String preciosCarburantesQuery) {
+    public void selectPreciosCarburantes(String preciosCarburantesQuery) throws PersistenceException {
     }
 
     @Override
-    public void selectUbicaciones(String ubicacionesQuery) {
+    public void selectUbicaciones(String ubicacionesQuery) throws PersistenceException {
     }
 
     /**
@@ -142,46 +147,53 @@ public class JDBC_ReadDao implements IReadDao {
      * @param rs : ResultSet
      * @param gson : Gson
      * @return JsonObject
-     * @throws SQLException : cuando hay un error en el acceso a la base de datos
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     @Override
-    public JsonObject buildStationJson(ResultSet rs, Gson gson) throws SQLException {
-        JsonObject estacion = new JsonObject();
-        estacion.addProperty("id_estacion", rs.getString("id_estacion"));
-        estacion.addProperty("tipo_estacion", rs.getString("tipo_estacion"));
-        estacion.addProperty("margen_estacion", rs.getString("margen_estacion"));
-        estacion.addProperty("horario_estacion", rs.getString("horario_estacion"));
-        estacion.addProperty("direccion_estacion", rs.getString("direccion_estacion"));
-        estacion.addProperty("latitud_estacion", rs.getDouble("latitud_estacion"));
-        estacion.addProperty("longitud_estacion", rs.getDouble("longitud_estacion"));
+    public JsonObject buildStationJson(ResultSet rs, Gson gson)  throws PersistenceException{
+        try {
+            JsonObject estacion = new JsonObject();
+            estacion.addProperty("id_estacion", rs.getString("id_estacion"));
+            estacion.addProperty("tipo_estacion", rs.getString("tipo_estacion"));
+            estacion.addProperty("margen_estacion", rs.getString("margen_estacion"));
+            estacion.addProperty("horario_estacion", rs.getString("horario_estacion"));
+            estacion.addProperty("direccion_estacion", rs.getString("direccion_estacion"));
+            estacion.addProperty("latitud_estacion", rs.getDouble("latitud_estacion"));
+            estacion.addProperty("longitud_estacion", rs.getDouble("longitud_estacion"));
 
-        JsonObject ubicacion = new JsonObject();
-        ubicacion.addProperty("id_localidad", rs.getString("id_localidad"));
-        ubicacion.addProperty("nombre_localidad", rs.getString("nombre_localidad"));
-        ubicacion.addProperty("id_municipio", rs.getInt("id_municipio"));
-        ubicacion.addProperty("nombre_municipio", rs.getString("nombre_municipio"));
-        ubicacion.addProperty("id_provincia", rs.getInt("id_provincia"));
-        ubicacion.addProperty("nombre_provincia", rs.getString("nombre_provincia"));
-        ubicacion.addProperty("id_codigo_postal", rs.getInt("id_codigo_postal"));
-        ubicacion.addProperty("numero_codigo_postal", rs.getString("numero_codigo_postal"));
-        estacion.add("ubicacion", ubicacion);
+            JsonObject ubicacion = new JsonObject();
+            ubicacion.addProperty("id_localidad", rs.getString("id_localidad"));
+            ubicacion.addProperty("nombre_localidad", rs.getString("nombre_localidad"));
+            ubicacion.addProperty("id_municipio", rs.getInt("id_municipio"));
+            ubicacion.addProperty("nombre_municipio", rs.getString("nombre_municipio"));
+            ubicacion.addProperty("id_provincia", rs.getInt("id_provincia"));
+            ubicacion.addProperty("nombre_provincia", rs.getString("nombre_provincia"));
+            ubicacion.addProperty("id_codigo_postal", rs.getInt("id_codigo_postal"));
+            ubicacion.addProperty("numero_codigo_postal", rs.getString("numero_codigo_postal"));
+            estacion.add("ubicacion", ubicacion);
 
-        JsonObject empresa = new JsonObject();
-        empresa.addProperty("id_empresa", rs.getString("id_empresa"));
-        empresa.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
-        estacion.add("empresa", empresa);
+            JsonObject empresa = new JsonObject();
+            empresa.addProperty("id_empresa", rs.getString("id_empresa"));
+            empresa.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
+            estacion.add("empresa", empresa);
 
-        JsonObject carburante = new JsonObject();
-        carburante.addProperty("id_carburante", rs.getString("id_carburante"));
-        carburante.addProperty("tipo_carburante", rs.getString("tipo_carburante"));
-        carburante.addProperty("precio_carburante", rs.getDouble("precio_carburante"));
-        carburante.addProperty("fecha_act_precio_carburante", rs.getString("fecha_act_precio_carburante"));
+            JsonObject carburante = new JsonObject();
+            carburante.addProperty("id_carburante", rs.getString("id_carburante"));
+            carburante.addProperty("tipo_carburante", rs.getString("tipo_carburante"));
+            carburante.addProperty("precio_carburante", rs.getDouble("precio_carburante"));
+            carburante.addProperty("fecha_act_precio_carburante",
+                                    rs.getString("fecha_act_precio_carburante"));
 
-        JsonArray combustibles = new JsonArray();
-        combustibles.add(carburante);
-        estacion.add("combustibles", combustibles);
+            JsonArray combustibles = new JsonArray();
+            combustibles.add(carburante);
+            estacion.add("combustibles", combustibles);
+            return estacion;
+        } catch (SQLException e) {
+            log.error("Error en acceso a la base de datos", e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
+        }
 
-        return estacion;
+
     }
 
     /**
@@ -190,39 +202,85 @@ public class JDBC_ReadDao implements IReadDao {
      * @param rs : ResultSet
      * @param gson : Gson
      * @return JsonObject
-     * @throws SQLException : cuando hay un error en el acceso a la base de datos
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     @Override
-    public JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws SQLException {
-        JsonObject petrolera = new JsonObject();
-        petrolera.addProperty("id_empresa", rs.getString("id_empresa"));
-        petrolera.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
+    public JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws PersistenceException {
 
-        JsonArray estaciones = new JsonArray();
+        try{
+            JsonObject petrolera = new JsonObject();
+            petrolera.addProperty("id_empresa", rs.getString("id_empresa"));
+            petrolera.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
 
-        JsonObject estacion = new JsonObject();
-        estacion.addProperty("id_estacion", rs.getString("id_estacion"));
-        estaciones.add(estacion);
+            JsonArray estaciones = new JsonArray();
 
-        petrolera.add("estaciones", estaciones);
+            JsonObject estacion = new JsonObject();
+            estacion.addProperty("id_estacion", rs.getString("id_estacion"));
+            estaciones.add(estacion);
 
-        return petrolera;
+            petrolera.add("estaciones", estaciones);
+
+            return petrolera;
+        } catch (SQLException e) {
+            log.error("Error en acceso a la base de datos", e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
+        }
     }
 
+    /**
+     * Construye un objeto JSON con los datos de un carburante.
+     *
+     * @param rs : ResultSet
+     * @param gson : Gson
+     * @return JsonObject
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
     @Override
-    public JsonObject buildCarburanteJson(ResultSet rs, Gson gson) {
-        return null;
+    public JsonObject buildCarburanteJson(ResultSet rs, Gson gson) throws PersistenceException {
+        try {
+            JsonObject carburante = new JsonObject();
+            carburante.addProperty("id_carburante", rs.getString("id_carburante"));
+            carburante.addProperty("tipo_carburante", rs.getString("tipo_carburante"));
+            return carburante;
+        } catch (SQLException e) {
+            log.error("Error en acceso a la base de datos", e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
+        }
     }
 
     @Override
     // precio_carburante
-    public JsonObject buildPrecioCarburanteJson(ResultSet rs, Gson gson) {
-        return null;
+    public JsonObject buildPrecioCarburanteJson(ResultSet rs, Gson gson) throws PersistenceException {
+        try{
+            JsonObject precioCarburante = new JsonObject();
+            precioCarburante.addProperty("id_precio_carburante", rs.getString("id_precio_carburante"));
+            precioCarburante.addProperty("precio_carburante", rs.getDouble("precio_carburante"));
+            precioCarburante.addProperty("fecha_act_precio_carburante", rs.getString("fecha_act_precio_carburante"));
+            return precioCarburante;
+        } catch (SQLException e) {
+            log.error("Error en acceso a la base de datos", e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
+        }
     }
 
     @Override
-    public JsonObject buildUbicacionJson(ResultSet rs, Gson gson) {
-        return null;
+    public JsonObject buildUbicacionJson(ResultSet rs, Gson gson) throws PersistenceException {
+
+        try {
+            JsonObject ubicacion = new JsonObject();
+            ubicacion.addProperty("id_localidad", rs.getString("id_localidad"));
+            ubicacion.addProperty("nombre_localidad", rs.getString("nombre_localidad"));
+            ubicacion.addProperty("id_municipio", rs.getInt("id_municipio"));
+            ubicacion.addProperty("nombre_municipio", rs.getString("nombre_municipio"));
+            ubicacion.addProperty("id_provincia", rs.getInt("id_provincia"));
+            ubicacion.addProperty("nombre_provincia", rs.getString("nombre_provincia"));
+            ubicacion.addProperty("id_codigo_postal", rs.getInt("id_codigo_postal"));
+            ubicacion.addProperty("numero_codigo_postal", rs.getString("numero_codigo_postal"));
+            return ubicacion;
+        } catch (SQLException e) {
+            log.error("Error en acceso a la base de datos", e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
+        }
     }
 
     /**
@@ -232,11 +290,12 @@ public class JDBC_ReadDao implements IReadDao {
      * @param fileName : String
      */
     @Override
-    public void writeJsonToFile(JsonObject jsonObject, String fileName) {
+    public void writeJsonToFile(JsonObject jsonObject, String fileName) throws PersistenceException {
         try (FileWriter writer = new FileWriter(fileName)) {
             new Gson().toJson(jsonObject, writer);
         } catch (IOException e) {
             log.error("Error de escritura: {}", fileName, e);
+            throw new PersistenceException("Error de escritura", e);
         }
     }
 }

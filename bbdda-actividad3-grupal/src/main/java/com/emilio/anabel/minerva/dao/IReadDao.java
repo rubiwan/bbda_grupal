@@ -1,6 +1,7 @@
 package com.emilio.anabel.minerva.dao;
 
 import com.emilio.anabel.minerva.config.MysqlConnector;
+import com.emilio.anabel.minerva.exception.PersistenceException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -14,7 +15,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+/**
+ * Interfaz que define los métodos para realizar consultas a la base de datos.
+ *
+ * @version 1.0 - 2025-01-15
+ * @author Emilio, Anabel, Minerva
+ */
 public interface IReadDao {
 
 
@@ -22,26 +28,41 @@ public interface IReadDao {
      * Realiza una consulta a la base de datos para obtener todas las estaciones de servicio.
      *
      * @param query : String
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void selectEstaciones(String query);
+    void selectEstaciones(String query) throws PersistenceException;
 
     /**
      * Realiza una consulta a la base de datos para obtener todas las empresas.
      *
      * @param query : String
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void selectPetroleras(String query);
+    void selectPetroleras(String query)throws PersistenceException;
 
     /**
      * Realiza una consulta a la base de datos para obtener todos los carburantes.
      *
      * @param carburantesQuery : String
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void selectCarburantes(String carburantesQuery);
+    void selectCarburantes(String carburantesQuery) throws PersistenceException;
 
-    public void selectPreciosCarburantes(String preciosCarburantesQuery);
+    /**
+     * Realiza una consulta a la base de datos para obtener todos los precios de los carburantes.
+     *
+     * @param preciosCarburantesQuery : String
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    void selectPreciosCarburantes(String preciosCarburantesQuery) throws PersistenceException;
 
-    public void selectUbicaciones(String ubicacionesQuery);
+    /**
+     * Realiza una consulta a la base de datos para obtener todas las ubicaciones.
+     *
+     * @param ubicacionesQuery : String
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    void selectUbicaciones(String ubicacionesQuery) throws PersistenceException;
 
     /**
      * Construye un objeto JSON con los datos de una estación de servicio.
@@ -49,9 +70,9 @@ public interface IReadDao {
      * @param rs : ResultSet
      * @param gson : Gson
      * @return JsonObject
-     * @throws SQLException : cuando hay un error en el acceso a la base de datos
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public JsonObject buildStationJson(ResultSet rs, Gson gson) throws SQLException;
+    JsonObject buildStationJson(ResultSet rs, Gson gson) throws PersistenceException;
 
     /**
      * Construye un objeto JSON con los datos de una empresa.
@@ -59,15 +80,39 @@ public interface IReadDao {
      * @param rs : ResultSet
      * @param gson : Gson
      * @return JsonObject
-     * @throws SQLException : cuando hay un error en el acceso a la base de datos
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws SQLException;
+    JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws PersistenceException;
 
-    public JsonObject buildCarburanteJson(ResultSet rs, Gson gson);
-    // precio_carburante
-    public JsonObject buildPrecioCarburanteJson(ResultSet rs, Gson gson);
+    /**
+     * Construye un objeto JSON con los datos de un carburante.
+     *
+     * @param rs : ResultSet
+     * @param gson : Gson
+     * @return JsonObject
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    JsonObject buildCarburanteJson(ResultSet rs, Gson gson) throws PersistenceException;
 
-    public JsonObject  buildUbicacionJson(ResultSet rs, Gson gson);
+    /**
+     * Construye un objeto JSON con los datos de un precio de carburante.
+     *
+     * @param rs : ResultSet
+     * @param gson : Gson
+     * @return JsonObject
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    JsonObject buildPrecioCarburanteJson(ResultSet rs, Gson gson) throws PersistenceException;
+
+    /**
+     * Construye un objeto JSON con los datos de una ubicación.
+     *
+     * @param rs : ResultSet
+     * @param gson : Gson
+     * @return JsonObject
+     * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
+     */
+    JsonObject  buildUbicacionJson(ResultSet rs, Gson gson) throws PersistenceException;
 
     /**
      * Escribe un objeto JSON en un archivo.
@@ -75,5 +120,5 @@ public interface IReadDao {
      * @param jsonObject : JsonObject
      * @param fileName : String
      */
-    public void writeJsonToFile(JsonObject jsonObject, String fileName);
+    void writeJsonToFile(JsonObject jsonObject, String fileName)throws PersistenceException;
 }

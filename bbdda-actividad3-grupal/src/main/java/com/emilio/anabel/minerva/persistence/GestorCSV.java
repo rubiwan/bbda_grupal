@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 public final class GestorCSV {
 
+    //ejecutar en el constructor
 
     /**
      * Lee un archivo CSV y devuelve una lista con los valores de cada fila.
