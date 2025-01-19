@@ -1,5 +1,6 @@
 package app;
 
+import com.emilio.anabel.minerva.config.GestorConnectors;
 import com.emilio.anabel.minerva.config.MysqlConnector;
 import com.emilio.anabel.minerva.exception.LogicException;
 import com.emilio.anabel.minerva.exception.PersistenceException;
@@ -57,6 +58,31 @@ public class Main {
                 log.error("Error al inicializar el sistema", e);
             }
         }
+/*
+    public static void main(String[] args) {
+        GestorConnectors dbGestor = new GestorConnectors();
+        try {
+            log.info("Inicio del sistema");
+
+            // Operaciones con MySQL
+            Connection mysqlConnection = dbManager.getMysqlConnection();
+            new Main(mysqlConnection);
+            insertAll();
+            selectAll();
+
+            // Operaciones con MongoDB
+            MongoDatabase mongoDatabase = dbManager.getMongoDatabase();
+            mongoDatabase.getCollection("miColeccion").insertOne(
+                    new org.bson.Document("clave", "valor")
+            );
+        } catch (Exception e) {
+            System.out.println("Error al inicializar el sistema: " + e.getMessage());
+            log.error("Error al inicializar el sistema", e);
+        } finally {
+            dbManager.closeConnections();
+        }
+    }
+    */
 
     /**
      * Metodo que selecciona todos los datos de la base de datos.
