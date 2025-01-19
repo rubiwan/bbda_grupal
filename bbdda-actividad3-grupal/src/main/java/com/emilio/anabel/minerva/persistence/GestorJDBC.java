@@ -1,6 +1,8 @@
 package com.emilio.anabel.minerva.persistence;
 
+import app.write.MongoWrite;
 import app.write.MysqlWrite;
+import com.emilio.anabel.minerva.config.constants.MongoCollection;
 import com.emilio.anabel.minerva.config.constants.MysqlQueries;
 import com.emilio.anabel.minerva.exception.LogicException;
 import com.emilio.anabel.minerva.exception.PersistenceException;
@@ -22,6 +24,7 @@ public class GestorJDBC {
     private final JDBC_ReadDao jdbcReadDao;
     private final JDBC_WriteDao jdbcWriteDao;
     private final MysqlWrite mysqlWrite;
+    private final MongoWrite mongoWrite;
 
     private final Connection connection;
 
@@ -36,9 +39,26 @@ public class GestorJDBC {
         this.jdbcWriteDao = new JDBC_WriteDao(connection);
 
         this.mysqlWrite = new MysqlWrite(jdbcWriteDao);
+        this.mongoWrite = new MongoWrite();
 
         log.info("Sistema inicializado correctamente");
     }
+
+
+    //todas las operaciones de persistencia deberian hacerse en esta clase
+
+    public void insertAllJson(String folderPath, String collectionName) throws PersistenceException, LogicException {
+        try {
+            mongoWrite.insertarJsonEnBatches(folderPath, collectionName);
+        } catch (PersistenceException e) {
+            log.error("Error al insertar los datos", e);
+            throw new PersistenceException("Error al insertar los datos", e);
+        } catch (LogicException e) {
+            log.error("Error al insertar los datos", e);
+            throw new LogicException("Error al insertar los datos", e);
+        }
+    }
+
 
     /**
      * Inserta los datos en la base de datos MySQL.
