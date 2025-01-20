@@ -1,11 +1,8 @@
-package com.emilio.anabel.minerva.persistence;
+package persistence;
 
-import app.write.MongoWrite;
-import app.write.MysqlWrite;
-import com.emilio.anabel.minerva.config.constants.MongoCollection;
-import com.emilio.anabel.minerva.config.constants.MysqlQueries;
-import com.emilio.anabel.minerva.exception.LogicException;
-import com.emilio.anabel.minerva.exception.PersistenceException;
+import constants.MysqlQueries;
+import exception.LogicException;
+import exception.PersistenceException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

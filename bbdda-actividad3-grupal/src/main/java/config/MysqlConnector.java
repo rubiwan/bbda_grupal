@@ -1,8 +1,7 @@
-package com.emilio.anabel.minerva.config;
+package config;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**

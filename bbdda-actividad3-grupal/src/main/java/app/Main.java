@@ -1,18 +1,13 @@
 package app;
 
-import com.emilio.anabel.minerva.config.MongoConnector;
-import com.emilio.anabel.minerva.config.MysqlConnector;
-import com.emilio.anabel.minerva.config.constants.MongoCollection;
-import com.emilio.anabel.minerva.exception.LogicException;
-import com.emilio.anabel.minerva.exception.PersistenceException;
-import com.emilio.anabel.minerva.persistence.GestorJDBC;
+import config.MysqlConnector;
+import exception.LogicException;
+import exception.PersistenceException;
+import persistence.GestorJDBC;
 
 import java.io.File;
-import java.util.Arrays;
 import java.sql.Connection;
-import java.util.List;
 
-import com.mongodb.client.MongoDatabase;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -1,6 +1,6 @@
-package com.emilio.anabel.minerva.dao;
+package dao;
 
-import com.emilio.anabel.minerva.exception.PersistenceException;
+import exception.PersistenceException;
 
 import java.sql.PreparedStatement;
 import java.util.List;

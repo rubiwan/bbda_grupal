@@ -1,7 +1,7 @@
-package app.write;
-import com.emilio.anabel.minerva.config.MongoConnector;
-import com.emilio.anabel.minerva.exception.LogicException;
-import com.emilio.anabel.minerva.exception.PersistenceException;
+package persistence;
+import config.MongoConnector;
+import exception.LogicException;
+import exception.PersistenceException;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mongodb.client.MongoCollection;

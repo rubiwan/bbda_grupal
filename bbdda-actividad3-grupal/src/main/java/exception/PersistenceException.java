@@ -1,4 +1,4 @@
-package com.emilio.anabel.minerva.exception;
+package exception;
 
 public class PersistenceException extends Exception {
 

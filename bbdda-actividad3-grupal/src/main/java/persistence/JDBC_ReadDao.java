@@ -1,8 +1,8 @@
-package com.emilio.anabel.minerva.persistence;
+package persistence;
 
 
-import com.emilio.anabel.minerva.dao.IReadDao;
-import com.emilio.anabel.minerva.exception.PersistenceException;
+import dao.IReadDao;
+import exception.PersistenceException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

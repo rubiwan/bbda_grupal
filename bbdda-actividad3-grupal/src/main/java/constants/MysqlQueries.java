@@ -1,4 +1,4 @@
-package com.emilio.anabel.minerva.config.constants;
+package constants;
 
 import lombok.Getter;
 

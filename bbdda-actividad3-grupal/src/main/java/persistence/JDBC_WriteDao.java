@@ -1,12 +1,12 @@
-package com.emilio.anabel.minerva.persistence;
+package persistence;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.emilio.anabel.minerva.dao.IWriteDao;
-import com.emilio.anabel.minerva.exception.PersistenceException;
+import dao.IWriteDao;
+import exception.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 
 /**

@@ -1,17 +1,13 @@
-package app.write;
+package persistence;
 
 
-import com.emilio.anabel.minerva.exception.LogicException;
-import com.emilio.anabel.minerva.exception.PersistenceException;
-import com.emilio.anabel.minerva.persistence.GestorCSV;
-import com.emilio.anabel.minerva.persistence.JDBC_WriteDao;
+import exception.LogicException;
+import exception.PersistenceException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import lombok.extern.slf4j.Slf4j;
 
 
 /**

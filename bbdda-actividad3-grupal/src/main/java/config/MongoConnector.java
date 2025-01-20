@@ -1,4 +1,4 @@
-package com.emilio.anabel.minerva.config;
+package config;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;

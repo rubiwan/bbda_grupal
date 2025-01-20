@@ -1,6 +1,6 @@
-package com.emilio.anabel.minerva.persistence;
+package persistence;
 
-import com.emilio.anabel.minerva.exception.LogicException;
+import exception.LogicException;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvException;
