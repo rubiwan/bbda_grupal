@@ -63,9 +63,15 @@ public class GestorJDBC {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     public void insertAll() throws PersistenceException, LogicException {
+        mysqlWrite.insertEstaciones();
         mysqlWrite.insertEmpresas();
         mysqlWrite.insertCarburantes();
-//        mysqlWrite.insertMunicipios();
+        mysqlWrite.insertProvincias();
+        mysqlWrite.insertCodigosPostales();
+        mysqlWrite.insertPrecios();
+        mysqlWrite.insertLocalidades();
+        mysqlWrite.insertRelacionCP_Localidad();
+        mysqlWrite.insertMunicipios();
     }
 
     /**
@@ -74,7 +80,7 @@ public class GestorJDBC {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     public void selectAll() throws PersistenceException {
-//        selectEstaciones();
+        selectEstaciones();
         selectPetroleras();
         selectCarburantes();
         selectPreciosCarburantes();
