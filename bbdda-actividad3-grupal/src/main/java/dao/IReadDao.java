@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.sql.ResultSet;
+import java.util.Map;
 
 
 /**
@@ -30,7 +31,7 @@ public interface IReadDao {
      * @param query : String
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    void selectPetroleras(String query)throws PersistenceException;
+    void selectEmpresas(String query)throws PersistenceException;
 
     /**
      * Realiza una consulta a la base de datos para obtener todos los carburantes.
@@ -70,11 +71,10 @@ public interface IReadDao {
      * Construye un objeto JSON con los datos de una empresa.
      *
      * @param rs : ResultSet
-     * @param gson : Gson
      * @return JsonObject
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws PersistenceException;
+    JsonObject buildPetroleraJson(ResultSet rs, Map<Integer, JsonObject> empresasMap) throws PersistenceException;
 
     /**
      * Construye un objeto JSON con los datos de un carburante.

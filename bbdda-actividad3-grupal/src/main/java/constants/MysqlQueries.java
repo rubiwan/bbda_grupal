@@ -49,7 +49,7 @@ public enum MysqlQueries {
         ORDER BY e.id_estacion;
         """),
 
-    SELECT_PETROLERAS("""
+    SELECT_EMPRESAS("""
         SELECT
             emp.id_empresa,
             emp.nombre_empresa,

@@ -81,7 +81,7 @@ public class GestorJDBC {
      */
     public void selectAll() throws PersistenceException {
         selectEstaciones();
-        selectPetroleras();
+        selectEmpresas();
         selectCarburantes();
         selectPreciosCarburantes();
         selectUbicaciones();
@@ -102,9 +102,9 @@ public class GestorJDBC {
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    public void selectPetroleras() throws PersistenceException {
-        String query = MysqlQueries.SELECT_PETROLERAS.getQuery();
-        jdbcReadDao.selectPetroleras(query);
+    public void selectEmpresas() throws PersistenceException {
+        String query = MysqlQueries.SELECT_EMPRESAS.getQuery();
+        jdbcReadDao.selectEmpresas(query);
     }
 
     /**

@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Clase que realiza consultas a la base de datos MySQL.
@@ -65,13 +67,35 @@ public class JDBC_ReadDao implements IReadDao {
         }
     }
 
-    /**
-     * Realiza una consulta a la base de datos para obtener todas las empresas.
-     *
-     * @param query : String
-     */
+    public void selectEmpresas(String query) throws PersistenceException {
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            Map<Integer, JsonObject> empresasMap = new HashMap<>();
+
+            while (rs.next()) {
+                buildPetroleraJson(rs, empresasMap);
+            }
+
+            // ver si escribe las emppresas
+            String filePath = "src/main/resources/json/empresas/";
+            for (JsonObject petrolera : empresasMap.values()) {
+                int idEmpresa = petrolera.get("id_empresa").getAsInt();
+                String fileName = filePath + "empresa_" + idEmpresa + ".json";
+                writeJsonToFile(petrolera, fileName);
+                log.info("JSON creado: {}", fileName);
+            }
+        } catch (SQLException e) {
+            log.error("Error en acceso a la base de datos: {}", query, e);
+            throw new PersistenceException("Error en acceso a la base de datos", e);
+        }
+    }
+
+
+    /*
+
     @Override
-    public void selectPetroleras(String query) throws PersistenceException {
+    public void selectEmpresas(String query) throws PersistenceException {
 
        try (Statement stmt = connection.createStatement();
                   ResultSet rs = stmt.executeQuery(query))  {
@@ -88,7 +112,7 @@ public class JDBC_ReadDao implements IReadDao {
                 JsonObject petrolera = buildPetroleraJson(rs, gson);
 
                 String filePath = "src/main/resources/json/empresas/";
-                String fileName = filePath + "petrolera_" + rs.getInt("id_empresa") + ".json";
+                String fileName = filePath + "empresa_" + rs.getInt("id_empresa") + ".json";
                 writeJsonToFile(petrolera, fileName);
 
                 log.info("JSON creado: {}", fileName);
@@ -98,7 +122,7 @@ public class JDBC_ReadDao implements IReadDao {
            throw new PersistenceException("Error en acceso a la base de datos", e);
        }
     }
-
+*/
     /**
      * Realiza una consulta a la base de datos para obtener todos los carburantes.
      *
@@ -255,20 +279,32 @@ public class JDBC_ReadDao implements IReadDao {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     @Override
-    public JsonObject buildPetroleraJson(ResultSet rs, Gson gson) throws PersistenceException {
+    public JsonObject buildPetroleraJson(ResultSet rs, Map<Integer, JsonObject> empresasMap) throws PersistenceException {
+        try {
+            int idEmpresa = rs.getInt("id_empresa");
+            String nombreEmpresa = rs.getString("nombre_empresa");
+            int idEstacion = rs.getInt("id_estacion");
 
-        try{
-            JsonObject petrolera = new JsonObject();
-            petrolera.addProperty("id_empresa", rs.getString("id_empresa"));
-            petrolera.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
+            // Fetch or create the empresa JSON object
+            JsonObject petrolera = empresasMap.getOrDefault(idEmpresa, new JsonObject());
+            petrolera.addProperty("id_empresa", idEmpresa);
+            petrolera.addProperty("nombre_empresa", nombreEmpresa);
 
-            JsonArray estaciones = new JsonArray();
+            // Fetch or create the estaciones array
+            JsonArray estaciones = petrolera.has("estaciones") ? petrolera.getAsJsonArray("estaciones") : new JsonArray();
 
-            JsonObject estacion = new JsonObject();
-            estacion.addProperty("id_estacion", rs.getString("id_estacion"));
-            estaciones.add(estacion);
+            // Add the current estacion to the estaciones array if not null
+            if (idEstacion != 0) {
+                JsonObject estacion = new JsonObject();
+                estacion.addProperty("id_estacion", idEstacion);
+                estaciones.add(estacion);
+            }
 
+            // Update the estaciones array in the petrolera object
             petrolera.add("estaciones", estaciones);
+
+            // Save the updated object back to the map
+            empresasMap.put(idEmpresa, petrolera);
 
             return petrolera;
         } catch (SQLException e) {
@@ -276,6 +312,7 @@ public class JDBC_ReadDao implements IReadDao {
             throw new PersistenceException("Error en acceso a la base de datos", e);
         }
     }
+
 
     /**
      * Construye un objeto JSON con los datos de un carburante.
