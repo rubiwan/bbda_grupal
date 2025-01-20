@@ -4,7 +4,7 @@
 
 ### Emilio Brahim Quechen Romero
 ### Minerva Barroso Murillo
-### Ana Isabel Díaz Roig
+### Anabel Díaz
 
 
 
