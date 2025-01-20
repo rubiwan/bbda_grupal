@@ -63,15 +63,15 @@ public class GestorJDBC {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     public void insertAll() throws PersistenceException, LogicException {
-        mysqlWrite.insertEstaciones();
         mysqlWrite.insertEmpresas();
         mysqlWrite.insertCarburantes();
         mysqlWrite.insertProvincias();
-        mysqlWrite.insertCodigosPostales();
-        mysqlWrite.insertPrecios();
         mysqlWrite.insertLocalidades();
-        mysqlWrite.insertRelacionCP_Localidad();
         mysqlWrite.insertMunicipios();
+        mysqlWrite.insertCodigosPostales();
+        mysqlWrite.insertRelacionCP_Localidad();
+        mysqlWrite.insertEstaciones();
+        mysqlWrite.insertPrecios();
     }
 
     /**

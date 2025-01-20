@@ -107,7 +107,7 @@ public class Main {
             gestorJDBC.insertAll();
         } catch (PersistenceException | LogicException e) {
             log.error("Error al insertar los datos", e);
-            System.out.println("Error al insertar los datos: " + e.getMessage());
+            System.out.println("Error al insertar los datos: " + e.getMessage());//ELIMINAAAAAAAR!!!!!!!
         }
     }
 

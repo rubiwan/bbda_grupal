@@ -74,7 +74,7 @@ public interface IReadDao {
      * @return JsonObject
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
-    JsonObject buildPetroleraJson(ResultSet rs, Map<Integer, JsonObject> empresasMap) throws PersistenceException;
+    JsonObject buildPetroleraJson(ResultSet rs, Map<String, JsonObject> empresasMap) throws PersistenceException;
 
     /**
      * Construye un objeto JSON con los datos de un carburante.

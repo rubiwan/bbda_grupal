@@ -71,7 +71,7 @@ public class JDBC_ReadDao implements IReadDao {
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
-            Map<Integer, JsonObject> empresasMap = new HashMap<>();
+            Map<String, JsonObject> empresasMap = new HashMap<>();
 
             while (rs.next()) {
                 buildPetroleraJson(rs, empresasMap);
@@ -80,7 +80,7 @@ public class JDBC_ReadDao implements IReadDao {
             // ver si escribe las emppresas
             String filePath = "src/main/resources/json/empresas/";
             for (JsonObject petrolera : empresasMap.values()) {
-                int idEmpresa = petrolera.get("id_empresa").getAsInt();
+                String idEmpresa = petrolera.get("id_empresa").getAsString();
                 String fileName = filePath + "empresa_" + idEmpresa + ".json";
                 writeJsonToFile(petrolera, fileName);
                 log.info("JSON creado: {}", fileName);
@@ -139,14 +139,14 @@ public class JDBC_ReadDao implements IReadDao {
             while (rs.next()) {
                 if (rs.getObject("id_carburante") == null) {
                     log.warn("Salta el carburante con id_carburante nulo"
-                            + rs.getInt("id_carburante"));
+                            + rs.getString("id_carburante"));
                     continue;
                 }
 
                 JsonObject carburante = buildCarburanteJson(rs, gson);
 
                 String filePath = "src/main/resources/json/carburantes/";
-                String fileName = filePath + "carburante_" + rs.getInt("id_carburante") + ".json";
+                String fileName = filePath + "carburante_" + rs.getString("id_carburante") + ".json";
                 writeJsonToFile(carburante, fileName);
 
                 log.info("JSON creado: {}", fileName);
@@ -168,14 +168,14 @@ public class JDBC_ReadDao implements IReadDao {
             while (rs.next()) {
                 if (rs.getObject("id_precio_carburante") == null) {
                     log.warn("Salta el precio del carburante con id_precio_carburante nulo o precio_carburante nulo"
-                            + rs.getInt("id_precio_carburante"));
+                            + rs.getString("id_precio_carburante"));
                     continue;
                 }
 
                 JsonObject precioCarburante = buildPrecioCarburanteJson(rs, gson);
 
                 String filePath = "src/main/resources/json/precios/";
-                String fileName = filePath + "precio_" + rs.getInt("id_precio_carburante") + ".json";
+                String fileName = filePath + "precio_" + rs.getString("id_precio_carburante") + ".json";
                 writeJsonToFile(precioCarburante, fileName);
 
                 log.info("JSON creado: {}", fileName);
@@ -197,14 +197,14 @@ public class JDBC_ReadDao implements IReadDao {
             while (rs.next()) {
                 if (rs.getObject("id_localidad") == null) {
                     log.warn("Salta la ubicación con id_localidad nulo"
-                            + rs.getInt("id_localidad"));
+                            + rs.getString("id_localidad"));
                     continue;
                 }
 
                 JsonObject ubicacion = buildUbicacionJson(rs, gson);
 
                 String filePath = "src/main/resources/json/ubicaciones/";
-                String fileName = filePath + "ubicacion_" + rs.getInt("id_localidad") + ".json";
+                String fileName = filePath + "ubicacion_" + rs.getString("id_localidad") + ".json";
                 writeJsonToFile(ubicacion, fileName);
 
                 log.info("JSON creado: {}", fileName);
@@ -238,11 +238,11 @@ public class JDBC_ReadDao implements IReadDao {
             JsonObject ubicacion = new JsonObject();
             ubicacion.addProperty("id_localidad", rs.getString("id_localidad"));
             ubicacion.addProperty("nombre_localidad", rs.getString("nombre_localidad"));
-            ubicacion.addProperty("id_municipio", rs.getInt("id_municipio"));
+            ubicacion.addProperty("id_municipio", rs.getString("id_municipio"));
             ubicacion.addProperty("nombre_municipio", rs.getString("nombre_municipio"));
-            ubicacion.addProperty("id_provincia", rs.getInt("id_provincia"));
+            ubicacion.addProperty("id_provincia", rs.getString("id_provincia"));
             ubicacion.addProperty("nombre_provincia", rs.getString("nombre_provincia"));
-            ubicacion.addProperty("id_codigo_postal", rs.getInt("id_codigo_postal"));
+            ubicacion.addProperty("id_codigo_postal", rs.getString("id_codigo_postal"));
             ubicacion.addProperty("numero_codigo_postal", rs.getString("numero_codigo_postal"));
             estacion.add("ubicacion", ubicacion);
 
@@ -274,16 +274,15 @@ public class JDBC_ReadDao implements IReadDao {
      * Construye un objeto JSON con los datos de una empresa.
      *
      * @param rs : ResultSet
-     * @param gson : Gson
      * @return JsonObject
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     @Override
-    public JsonObject buildPetroleraJson(ResultSet rs, Map<Integer, JsonObject> empresasMap) throws PersistenceException {
+    public JsonObject buildPetroleraJson(ResultSet rs, Map<String, JsonObject> empresasMap) throws PersistenceException {
         try {
-            int idEmpresa = rs.getInt("id_empresa");
+            String idEmpresa = rs.getString("id_empresa");
             String nombreEmpresa = rs.getString("nombre_empresa");
-            int idEstacion = rs.getInt("id_estacion");
+            String idEstacion = rs.getString("id_estacion");
 
             // Fetch or create the empresa JSON object
             JsonObject petrolera = empresasMap.getOrDefault(idEmpresa, new JsonObject());
@@ -294,7 +293,7 @@ public class JDBC_ReadDao implements IReadDao {
             JsonArray estaciones = petrolera.has("estaciones") ? petrolera.getAsJsonArray("estaciones") : new JsonArray();
 
             // Add the current estacion to the estaciones array if not null
-            if (idEstacion != 0) {
+            if (idEstacion != null) {
                 JsonObject estacion = new JsonObject();
                 estacion.addProperty("id_estacion", idEstacion);
                 estaciones.add(estacion);
