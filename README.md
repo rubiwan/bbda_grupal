@@ -4,7 +4,7 @@
 
 ### Emilio Brahim Quechen Romero
 ### Minerva Barroso Murillo
-### Ana Isabel Díaz Roig
+### Anabel Díaz
 
 
 ## Para establecer conexión con las BBDD correctamente a través del proyecto Java "bbdda-actividad3-grupal" se debe hacer lo siguiente:
