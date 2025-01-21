@@ -11,9 +11,6 @@ import java.util.List;
  */
 public class MysqlColumns {
 
-    // Bases de datos
-    public static final String BBDD_NAME = "carburantes";
-
     // Tablas
     public static final String PROVINCIA_TABLE      = "provincia";
     public static final String MUNICIPIO_TABLE      = "municipio";

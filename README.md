@@ -10,13 +10,13 @@
 ## Para establecer conexión con las BBDD correctamente a través del proyecto Java "bbdda-actividad3-grupal" se debe hacer lo siguiente:
 
 	* Crear las variables de entorno:
-		MYSQL_DB_NAME=carburantes;
+		MYSQL_DB_NAME=estaciones_de_servicio_mysql;
 		MYSQL_DB_HOST=localhost;
 		MYSQL_USER=root;
 		MYSQL_PASSWORD=mysql;
 		MYSQL_DB_PORT=3306;
 		
-		MONGO_DB_NAME=carburantes_mongo;
+		MONGO_DB_NAME=estaciones_de_servicio_mongodb;
 		MONGO_DB_HOST=localhost;
 		MONGO_USER=root;
 		MONGO_PASSWORD=mongo;
@@ -24,13 +24,13 @@
 
 
 	* Crear la BBDD MySQL con el nombre:
-		"carburantes"
+		"estaciones_de_servicio_mysql"
 	
-	* Ejecutar el script SQL que se encuentra en la carpeta "sql" del proyecto Java:
-		"carburantes.sql"
+	* Ejecutar el script SQL que se encuentra en la carpeta "src/main/resources/sql" del proyecto Java:
+		"estaciones_de_servicio_mysql.sql"
 
 	* Crear la BBDD MongoDB con el nombre:
-		"estacionesDeServicio"
+		"estaciones_de_servicio_mongodb"
 
 ## Flujo de ejecución:
 		1. Inyectar datos en la BBDD MySQL desde ficheros CSV.
