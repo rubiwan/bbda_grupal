@@ -69,13 +69,14 @@ public enum MysqlQueries {
 
     SELECT_PRECIOS_CARBURANTES("""
         SELECT
+            pc.id_precio_carburante,
             pc.id_estacion,
             pc.id_carburante,
             pc.precio_carburante,
             pc.fecha_act_precio_carburante
         FROM
             precio_carburante pc
-        ORDER BY pc.id_estacion, pc.id_carburante;
+        ORDER BY pc.id_precio_carburante;
         """),
 
     SELECT_UBICACIONES("""
@@ -95,6 +96,8 @@ public enum MysqlQueries {
         LEFT JOIN municipio m ON cp.id_municipio = m.id_municipio
         LEFT JOIN provincia p ON m.id_provincia = p.id_provincia;
         """);
+
+
 
     private final String query;
 

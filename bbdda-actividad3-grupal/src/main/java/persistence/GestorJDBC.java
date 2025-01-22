@@ -80,11 +80,13 @@ public class GestorJDBC {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     public void selectAll() throws PersistenceException {
+/*
         selectEstaciones();
         selectEmpresas();
         selectCarburantes();
+*/
         selectPreciosCarburantes();
-        selectUbicaciones();
+//        selectUbicaciones();
     }
 
     /**

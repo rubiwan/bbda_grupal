@@ -53,9 +53,9 @@ public class Main {
             try (Connection connection = new MysqlConnector().getConnection()) {
                 log.info("Inicio del sistema");
                 new Main(connection);
-                insertAll();
+//                insertAll();
                 selectAll();
-                insertAllJson();
+//                insertAllJson();
             } catch (Exception e) {
                 System.out.println("Error al inicializar el sistema: " + e.getMessage());
                 log.error("Error al inicializar el sistema", e);
