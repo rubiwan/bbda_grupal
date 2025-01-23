@@ -1,12 +1,15 @@
 package app;
 
 import config.MysqlConnector;
+import constants.MongoCollection;
 import exception.LogicException;
 import exception.PersistenceException;
 import persistence.GestorJDBC;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.List;
+import java.util.Arrays;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,13 +23,7 @@ public class Main {
         // 4. Read data from MongoDB ¿? ---- metemos un menu para que el usuario pueda elegir si quiere leer los datos de mongo o no?
 
     // pendiente
-        // 1.crear conexion con mongo
-
-        // 2.insertar datos en mongo
-
-        // 3.leer datos de mongo?
-
-        // 4.pruebas
+        // ¿ElasticSearch?
 
     private static GestorJDBC gestorJDBC;
     private static final String FOLDER_PATH = "src/main/resources/json";
@@ -35,7 +32,7 @@ public class Main {
     /**
      * Constructor de la clase Main
      *
-     * @throws PersistenceException
+     * @throws Exception: en caso de error al inicializar el sistema
      */
 	public Main(Connection connection) {
             try {
@@ -61,31 +58,6 @@ public class Main {
                 log.error("Error al inicializar el sistema", e);
             }
         }
-/*
-    public static void main(String[] args) {
-        GestorConnectors dbGestor = new GestorConnectors();
-        try {
-            log.info("Inicio del sistema");
-
-            // Operaciones con MySQL
-            Connection mysqlConnection = dbManager.getMysqlConnection();
-            new Main(mysqlConnection);
-            insertAll();
-            selectAll();
-
-            // Operaciones con MongoDB
-            MongoDatabase mongoDatabase = dbManager.getMongoDatabase();
-            mongoDatabase.getCollection("miColeccion").insertOne(
-                    new org.bson.Document("clave", "valor")
-            );
-        } catch (Exception e) {
-            System.out.println("Error al inicializar el sistema: " + e.getMessage());
-            log.error("Error al inicializar el sistema", e);
-        } finally {
-            dbManager.closeConnections();
-        }
-    }
-    */
 
     /**
      * Metodo que selecciona todos los datos de la base de datos.
@@ -107,23 +79,25 @@ public class Main {
             gestorJDBC.insertAll();
         } catch (PersistenceException | LogicException e) {
             log.error("Error al insertar los datos", e);
-            System.out.println("Error al insertar los datos: " + e.getMessage());//ELIMINAAAAAAAR!!!!!!!
+            System.out.println("Error al insertar los datos: " + e.getMessage());
         }
     }
 
     private static void insertAllJson(){
         try {
             //lista de colecciones de enum MongoCollection
-            //menuda fumada de codigo
-            /*List<MongoCollection> collections = Arrays.asList(MongoCollection.values());
+            List<MongoCollection> collections = Arrays.asList(MongoCollection.values());
             for (MongoCollection collection : collections) {
                 String collectionName = collection.getCollection();
                 String folderPath = FOLDER_PATH + File.separator + collectionName;
                 gestorJDBC.insertAllJson(folderPath, collectionName);
-            }*/
-            String collectionName = "empresas";
+            }
+            /*
+                        String collectionName = "empresas";
             String folderPath = FOLDER_PATH + File.separator + collectionName;
             gestorJDBC.insertAllJson(folderPath, collectionName);
+             */
+
 
         } catch (PersistenceException | LogicException e) {
             log.error("Error al insertar los datos", e);

@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application">
+    <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <envs>
+      <env name="MONGO_DB_HOST" value="localhost" />
+      <env name="MONGO_DB_NAME" value="estaciones_de_servicio_mongodb" />
+      <env name="MONGO_DB_PASSWORD" value="mongo" />
+      <env name="MONGO_DB_PORT" value="27017" />
+      <env name="MONGO_DB_USER" value="root" />
+      <env name="MYSQL_DB_HOST" value="localhost" />
+      <env name="MYSQL_DB_NAME" value="estaciones_de_servicio_mysql" />
+      <env name="MYSQL_DB_PASSWORD" value="mysql" />
+      <env name="MYSQL_DB_PORT" value="3306" />
+      <env name="MYSQL_DB_USER" value="root" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="app.Main" />
+    <module name="bbdda-actividad3-grupal" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
