@@ -195,10 +195,15 @@ public class JDBC_ReadDao implements IReadDao {
             Gson gson = new Gson();
 
             while (rs.next()) {
-                if (rs.getObject("id_localidad") == null) {
-                    log.warn("Salta la ubicación con id_localidad nulo"
-                            + rs.getString("id_localidad"));
-                    continue;
+//                if (rs.getObject("id_localidad") == null) {
+//                    log.warn("Salta la ubicación con id_localidad nulo"
+//                            + rs.getString("id_localidad"));
+//                    continue;
+//                }
+                int idLocalidadTemporal = rs.getInt("id_localidad");
+
+                if(idLocalidadTemporal >= 4247) {
+                    System.out.println(rs.getObject("nombre_localidad"));
                 }
 
                 JsonObject ubicacion = buildUbicacionJson(rs, gson);

@@ -84,9 +84,9 @@ public class GestorJDBC {
         selectEstaciones();
         selectEmpresas();
         selectCarburantes();
-*/
         selectPreciosCarburantes();
-//        selectUbicaciones();
+*/
+        selectUbicaciones();
     }
 
     /**

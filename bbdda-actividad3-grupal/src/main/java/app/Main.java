@@ -54,8 +54,8 @@ public class Main {
                 log.info("Inicio del sistema");
                 new Main(connection);
 //                insertAll();
-                selectAll();
-//                insertAllJson();
+//                selectAll();
+                insertAllJson();
             } catch (Exception e) {
                 System.out.println("Error al inicializar el sistema: " + e.getMessage());
                 log.error("Error al inicializar el sistema", e);
