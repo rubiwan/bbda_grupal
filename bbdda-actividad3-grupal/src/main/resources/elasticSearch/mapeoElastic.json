@@ -1,0 +1,107 @@
+//PUT /estaciones
+{
+  "mappings": {
+    "properties": {
+      "id_estacion": {
+        "type": "integer"
+      },
+      "tipo_estacion": {
+        "type": "keyword"
+      },
+      "margen_estacion": {
+        "type": "keyword"
+      },
+      "horario_estacion": {
+        "type": "text"
+      },
+      "direccion_estacion": {
+        "type": "text"
+      },
+      "ubicacion": {
+        "type": "geo_point"
+      },
+      "empresa": {
+        "properties": {
+          "id_empresa": {
+            "type": "integer"
+          },
+          "nombre_empresa": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "combustibles": {
+        "type": "nested",
+        "properties": {
+          "id_carburante": {
+            "type": "integer"
+          },
+          "tipo_carburante": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          },
+          "precio_carburante": {
+            "type": "float"
+          },
+          "fecha_act_precio_carburante": {
+            "type": "date",
+            "format": "dd/MM/yy HH:mm||strict_date_optional_time||epoch_millis"
+          }
+        }
+      },
+      "provincia": {
+        "properties": {
+          "id_provincia": {
+            "type": "integer"
+          },
+          "nombre_provincia": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "municipio": {
+        "properties": {
+          "id_municipio": {
+            "type": "integer"
+          },
+          "nombre_municipio": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
+      },
+      "codigo_postal": {
+        "properties": {
+          "id_codigo_postal": {
+            "type": "integer"
+          },
+          "numero_codigo_postal": {
+            "type": "keyword"
+          }
+        }
+      }
+    }
+  }
+}
