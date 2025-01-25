@@ -7,12 +7,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class MongoToElasticBulk {
 
     public static void main(String[] args) {
         // Ruta del archivo JSON exportado desde MongoDB
-        String inputFilePath = "/Users/anabeldiazroig/Desktop/bbdda_grupal/all_raw.json";
-        String outputFilePath = "/Users/anabeldiazroig/Desktop/bbdda_grupal/bulk_all_raw.json"; // Archivo de salida en formato bulk
+        String inputFilePath = "all_raw.json"; // Cambiar por la ruta correcta
+        String outputFilePath = "bulk_all_raw.json"; // Archivo de salida en formato bulk
 
         // Crear el ObjectMapper para procesar JSON
         ObjectMapper objectMapper = new ObjectMapper();
@@ -34,15 +41,18 @@ public class MongoToElasticBulk {
                     // Obtener el ID del documento
                     String documentId = documentNode.get("_id").get("$oid").asText();
 
-                    // escribir el encabezado
+                    // Corregido este error
                     fileWriter.write("{ \"index\": { \"_index\": \"" + collectionName + "\", \"_id\": \"" + documentId + "\" } }\n");
 
-                    // Escribir el documento como JSON
+                    // Eliminar el campo "_id" del documento
+                    ((com.fasterxml.jackson.databind.node.ObjectNode) documentNode).remove("_id");
+
+                    // Escribir el documento como JSON (sin el campo _id)
                     fileWriter.write(objectMapper.writeValueAsString(documentNode) + "\n");
                 }
             }
 
-            // Cerrar el filewriter
+            // Cerrar el archivo
             fileWriter.close();
 
             System.out.println("Archivo bulk generado exitosamente: " + outputFilePath);
@@ -53,3 +63,4 @@ public class MongoToElasticBulk {
         }
     }
 }
+
