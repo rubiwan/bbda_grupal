@@ -1,0 +1,45 @@
+{
+    "id_estacion": "3637",
+    "tipo_estacion": "Terrestre",
+    "margen_estacion": "D",
+    "horario_estacion": "L-V: 07:00-21:00; S-D: 09:00-14:00",
+    "direccion_estacion": "AVENIDA PAIS VALENCIA, 34",
+    "ubicacion": {
+      "latitud": 39.965333,
+      "longitud": -0.260417,
+      "localidad": {
+        "id_localidad": "1246",
+        "nombre_localidad": "ONDA"
+      },
+      "municipio": {
+        "id_municipio": "977",
+        "nombre_municipio": "ONDA"
+      },
+      "provincia": {
+        "id_provincia": "15",
+        "nombre_provincia": "CASTELLÓN / CASTELLÓ"
+      },
+      "codigo_postal": {
+        "id_codigo_postal": "1381",
+        "numero_codigo_postal": "12200"
+      }
+    },
+    "empresa": {
+      "id_empresa": "6",
+      "nombre_empresa": "CEPSA"
+    },
+    "combustibles": [
+      {
+        "id_carburante": "7",
+        "tipo_carburante": "gasóleo Premium",
+        "precio_carburante": 1.558,
+        "fecha_act_precio_carburante": "16/11/24 0:00"
+      },
+      {
+        "id_carburante": "5",
+        "tipo_carburante": "gasolina 98 E10",
+        "precio_carburante": 1.679,
+        "fecha_act_precio_carburante": "16/11/24 0:00"
+      }
+    ]
+  }

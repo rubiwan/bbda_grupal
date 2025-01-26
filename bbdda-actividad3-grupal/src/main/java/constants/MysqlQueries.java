@@ -11,6 +11,7 @@ import lombok.Getter;
 @Getter
 public enum MysqlQueries {
 
+/*
     SELECT_ESTACIONES("""
         SELECT
             e.id_estacion,
@@ -96,8 +97,39 @@ public enum MysqlQueries {
         LEFT JOIN municipio m ON cp.id_municipio = m.id_municipio
         LEFT JOIN provincia p ON m.id_provincia = p.id_provincia;
         """);
+*/  //BACKUP DE CONSULTAS
 
-
+    SELECT_ESTACIONES("""
+        SELECT
+           e.id_estacion,
+           e.tipo_estacion,
+           e.margen_estacion,
+           e.horario_estacion,
+           e.direccion_estacion,
+           e.latitud_estacion,
+           e.longitud_estacion,
+           l.nombre_localidad,
+           m.nombre_municipio,
+           p.nombre_provincia,
+           cp.numero_codigo_postal,
+           emp.nombre_empresa,
+           c.tipo_carburante,
+           pc.precio_carburante,
+           pc.fecha_act_precio_carburante
+       FROM
+           estacion e
+       LEFT JOIN localidad l ON e.id_localidad = l.id_localidad
+       LEFT JOIN relacion_cp_localidad rcl ON l.id_localidad = rcl.id_localidad
+       LEFT JOIN codigo_postal cp ON rcl.id_codigo_postal = cp.id_codigo_postal
+       LEFT JOIN municipio m ON cp.id_municipio = m.id_municipio
+       LEFT JOIN provincia p ON m.id_provincia = p.id_provincia
+       LEFT JOIN empresa emp ON e.id_empresa = emp.id_empresa
+       LEFT JOIN precio_carburante pc ON e.id_estacion = pc.id_estacion
+       LEFT JOIN carburante c ON pc.id_carburante = c.id_carburante
+       WHERE
+           e.tipo_estacion IN ('Terrestre', 'Maritima')
+       ORDER BY e.id_estacion;
+        """);
 
     private final String query;
 

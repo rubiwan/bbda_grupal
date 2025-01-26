@@ -1,11 +1,14 @@
 package constants;
 
 public enum MongoCollection {
+/*
     ESTACIONES("estaciones"),
     EMPRESAS("empresas"),
     CARBURANTES("carburantes"),
     PRECIOS("precios"),
     UBICACIONES("ubicaciones");
+*/
+    ESTACIONES("estaciones");
 
     private final String collection;
 

@@ -80,13 +80,13 @@ public class GestorJDBC {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     public void selectAll() throws PersistenceException {
-/*
         selectEstaciones();
+/*
         selectEmpresas();
         selectCarburantes();
         selectPreciosCarburantes();
-*/
         selectUbicaciones();
+*/
     }
 
     /**
@@ -99,43 +99,44 @@ public class GestorJDBC {
         jdbcReadDao.selectEstaciones(query);
     }
 
-    /**
+/*    //BORRAR?
+    *//**
      * Selecciona las petroleras de la base de datos MySQL.
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
-     */
+     *//*
     public void selectEmpresas() throws PersistenceException {
         String query = MysqlQueries.SELECT_EMPRESAS.getQuery();
         jdbcReadDao.selectEmpresas(query);
     }
 
-    /**
+    *//**
      * Selecciona los carburantes de la base de datos MySQL.
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
-     */
+     *//*
     public void selectCarburantes() throws PersistenceException {
         String query = MysqlQueries.SELECT_CARBURANTES.getQuery();
         jdbcReadDao.selectCarburantes(query);
     }
 
-    /**
+    *//**
      * Selecciona los precios de los carburantes de la base de datos MySQL.
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
-     */
+     *//*
     public void selectPreciosCarburantes() throws PersistenceException {
         String query = MysqlQueries.SELECT_PRECIOS_CARBURANTES.getQuery();
         jdbcReadDao.selectPreciosCarburantes(query);
     }
 
-    /**
+    *//**
      * Selecciona las ubicaciones de la base de datos MySQL.
      *
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
-     */
+     *//*
     public void selectUbicaciones() throws PersistenceException {
         String query = MysqlQueries.SELECT_UBICACIONES.getQuery();
         jdbcReadDao.selectUbicaciones(query);
-    }
+    }*/
 }

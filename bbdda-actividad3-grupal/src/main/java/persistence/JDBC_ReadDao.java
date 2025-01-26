@@ -74,7 +74,7 @@ public class JDBC_ReadDao implements IReadDao {
             Map<String, JsonObject> empresasMap = new HashMap<>();
 
             while (rs.next()) {
-                buildPetroleraJson(rs, empresasMap);
+                buildEmpresaJson(rs, empresasMap);
             }
 
             // ver si escribe las emppresas
@@ -232,40 +232,62 @@ public class JDBC_ReadDao implements IReadDao {
     public JsonObject buildStationJson(ResultSet rs, Gson gson)  throws PersistenceException{
         try {
             JsonObject estacion = new JsonObject();
-            estacion.addProperty("id_estacion", rs.getString("id_estacion"));
-            estacion.addProperty("tipo_estacion", rs.getString("tipo_estacion"));
-            estacion.addProperty("margen_estacion", rs.getString("margen_estacion"));
-            estacion.addProperty("horario_estacion", rs.getString("horario_estacion"));
-            estacion.addProperty("direccion_estacion", rs.getString("direccion_estacion"));
-            estacion.addProperty("latitud_estacion", rs.getDouble("latitud_estacion"));
-            estacion.addProperty("longitud_estacion", rs.getDouble("longitud_estacion"));
+            estacion.addProperty("tipo", rs.getString("tipo_estacion"));
+            estacion.addProperty("margen", rs.getString("margen_estacion"));
+            estacion.addProperty("horario", rs.getString("horario_estacion"));
 
             JsonObject ubicacion = new JsonObject();
-            ubicacion.addProperty("id_localidad", rs.getString("id_localidad"));
-            ubicacion.addProperty("nombre_localidad", rs.getString("nombre_localidad"));
-            ubicacion.addProperty("id_municipio", rs.getString("id_municipio"));
-            ubicacion.addProperty("nombre_municipio", rs.getString("nombre_municipio"));
-            ubicacion.addProperty("id_provincia", rs.getString("id_provincia"));
-            ubicacion.addProperty("nombre_provincia", rs.getString("nombre_provincia"));
-            ubicacion.addProperty("id_codigo_postal", rs.getString("id_codigo_postal"));
-            ubicacion.addProperty("numero_codigo_postal", rs.getString("numero_codigo_postal"));
+            ubicacion.addProperty("direccion", rs.getString("direccion_estacion"));
+            ubicacion.addProperty("latitud", rs.getDouble("latitud_estacion"));
+            ubicacion.addProperty("longitud", rs.getDouble("longitud_estacion"));
+            ubicacion.addProperty("localidad", rs.getString("nombre_localidad"));
+            ubicacion.addProperty("municipio", rs.getString("nombre_municipio"));
+            ubicacion.addProperty("provincia", rs.getString("nombre_provincia"));
+            ubicacion.addProperty("codigo_postal", rs.getString("numero_codigo_postal"));
             estacion.add("ubicacion", ubicacion);
 
             JsonObject empresa = new JsonObject();
-            empresa.addProperty("id_empresa", rs.getString("id_empresa"));
-            empresa.addProperty("nombre_empresa", rs.getString("nombre_empresa"));
+            empresa.addProperty("empresa", rs.getString("nombre_empresa"));
             estacion.add("empresa", empresa);
 
+
+
+
+
+
+
             JsonObject carburante = new JsonObject();
-            carburante.addProperty("id_carburante", rs.getString("id_carburante"));
-            carburante.addProperty("tipo_carburante", rs.getString("tipo_carburante"));
-            carburante.addProperty("precio_carburante", rs.getDouble("precio_carburante"));
-            carburante.addProperty("fecha_act_precio_carburante",
+            carburante.addProperty("carburante", rs.getString("tipo_carburante"));
+            carburante.addProperty("precio", rs.getDouble("precio_carburante"));
+            carburante.addProperty("fecha_actualizacion",
                                     rs.getString("fecha_act_precio_carburante"));
 
-            JsonArray combustibles = new JsonArray();
-            combustibles.add(carburante);
-            estacion.add("combustibles", combustibles);
+            JsonArray carburantes = new JsonArray();
+            carburantes.add(carburante);
+            estacion.add("carburantes", carburantes);
+
+
+
+/*              //probaaaaar
+            JsonArray carburantesRaw = gson.fromJson(rs.getString("tipo_carburante"), JsonArray.class);
+            JsonArray carburantes    = new JsonArray();
+
+
+            for (int i = 0; i < carburantesRaw.size(); i++) {
+                JsonObject carburante = carburantesRaw.get(i).getAsJsonObject();
+
+                if (carburante.has("precio_carburante") && !carburante.get("precio_carburante").isJsonNull())
+                    carburantes.add(carburante); // Añadir solo combustibles válidos
+            }
+            estacion.add("carburantes", carburantes);
+*/
+
+
+
+
+
+
+
             return estacion;
         } catch (SQLException e) {
             log.error("Error en acceso a la base de datos", e);
@@ -283,19 +305,19 @@ public class JDBC_ReadDao implements IReadDao {
      * @throws PersistenceException : cuando hay un error en el acceso a la base de datos
      */
     @Override
-    public JsonObject buildPetroleraJson(ResultSet rs, Map<String, JsonObject> empresasMap) throws PersistenceException {
+    public JsonObject buildEmpresaJson(ResultSet rs, Map<String, JsonObject> empresasMap) throws PersistenceException {
         try {
             String idEmpresa = rs.getString("id_empresa");
             String nombreEmpresa = rs.getString("nombre_empresa");
             String idEstacion = rs.getString("id_estacion");
 
             // Fetch or create the empresa JSON object
-            JsonObject petrolera = empresasMap.getOrDefault(idEmpresa, new JsonObject());
-            petrolera.addProperty("id_empresa", idEmpresa);
-            petrolera.addProperty("nombre_empresa", nombreEmpresa);
+            JsonObject empresa = empresasMap.getOrDefault(idEmpresa, new JsonObject());
+            empresa.addProperty("id_empresa", idEmpresa);
+            empresa.addProperty("nombre_empresa", nombreEmpresa);
 
             // Fetch or create the estaciones array
-            JsonArray estaciones = petrolera.has("estaciones") ? petrolera.getAsJsonArray("estaciones") : new JsonArray();
+            JsonArray estaciones = empresa.has("estaciones") ? empresa.getAsJsonArray("estaciones") : new JsonArray();
 
             // Add the current estacion to the estaciones array if not null
             if (idEstacion != null) {
@@ -304,13 +326,13 @@ public class JDBC_ReadDao implements IReadDao {
                 estaciones.add(estacion);
             }
 
-            // Update the estaciones array in the petrolera object
-            petrolera.add("estaciones", estaciones);
+            // Update the estaciones array in the empresa object
+            empresa.add("estaciones", estaciones);
 
             // Save the updated object back to the map
-            empresasMap.put(idEmpresa, petrolera);
+            empresasMap.put(idEmpresa, empresa);
 
-            return petrolera;
+            return empresa;
         } catch (SQLException e) {
             log.error("Error en acceso a la base de datos", e);
             throw new PersistenceException("Error en acceso a la base de datos", e);
