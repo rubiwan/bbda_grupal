@@ -1,7 +1,0 @@
-{
-  "query": {
-    "match": {
-      "tipo_estacion": "Terrestre"
-    }
-  }
-}

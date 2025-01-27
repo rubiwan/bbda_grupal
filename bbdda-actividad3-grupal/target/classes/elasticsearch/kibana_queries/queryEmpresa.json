@@ -1,0 +1,8 @@
+GET /estaciones/_search
+{
+  "query": {
+    "match": {
+      "empresa.empresa" : "AGRICOLA SAN ISIDRO"
+    }
+  }
+}

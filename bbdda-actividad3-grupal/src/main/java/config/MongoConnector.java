@@ -24,15 +24,19 @@ public class MongoConnector {
     private final MongoClient mongoClient;
     private final MongoDatabase database;
 
+/*
     private String urlTemporal = "mongodb://localhost:27017";
     private String dbNameTemporal = "Gasolineras";
+*/
 
     public MongoConnector() {
         try {
-            //mongoClient = MongoClients.create(DB_URL);
-            //database = mongoClient.getDatabase(DB_NAME);
+            mongoClient = MongoClients.create(DB_URL);
+            database = mongoClient.getDatabase(DB_NAME);
+/*
             mongoClient = MongoClients.create(urlTemporal);
             database = mongoClient.getDatabase(dbNameTemporal);
+*/
             log.info("Connection established with MongoDB.");
         } catch (Exception e) {
             log.error("Error conectando en la base de datos", e);

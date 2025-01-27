@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Main" type="Application" factoryName="Application">
-    <option name="ALTERNATIVE_JRE_PATH" value="/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home" />
+    <option name="ALTERNATIVE_JRE_PATH" value="open-jdk-21" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
       <env name="MONGO_DB_HOST" value="localhost" />

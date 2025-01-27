@@ -1,0 +1,33 @@
+PUT /estaciones
+{
+  "mappings": {
+    "properties": {
+      "tipo": { "type": "keyword" },
+      "margen": { "type": "keyword" },
+      "horario": { "type": "text" },
+      "ubicacion": {
+        "properties": {
+          "direccion": { "type": "text" },
+          "coordenadas": { "type": "geo_point" },
+          "localidad": { "type": "keyword" },
+          "municipio": { "type": "keyword" },
+          "provincia": { "type": "keyword" },
+          "codigo_postal": { "type": "keyword" }
+        }
+      },
+      "empresa": {
+        "properties": {
+          "empresa": { "type": "keyword" }
+        }
+      },
+      "carburantes": {
+        "type": "nested",
+        "properties": {
+          "carburante": { "type": "keyword" },
+          "precio": { "type": "float" },
+          "fecha_actualizacion": { "type": "date", "format": "dd/MM/yy HH:mm" }
+        }
+      }
+    }
+  }
+}
