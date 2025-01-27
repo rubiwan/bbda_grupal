@@ -10,12 +10,15 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 public class JsonToElasticBulk {
+
+    private static final SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/yy H:mm");
+    private static final SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm");
 
     /**
      * Combina todos los archivos JSON de estaciones en un único archivo JSONL,
@@ -101,10 +104,31 @@ public class JsonToElasticBulk {
                 carburante.remove("id_carburante"); // Eliminar ID
                 carburante.put("carburante", carburante.remove("tipo_carburante"));
                 carburante.put("precio", carburante.remove("precio_carburante"));
-                carburante.put("fecha_actualizacion", carburante.remove("fecha_act_precio_carburante"));
+
+                // Validar y formatear fecha
+                String rawDate = (String) carburante.remove("fecha_act_precio_carburante");
+                carburante.put("fecha_actualizacion", formatFecha(rawDate));
             }
             result.put("carburantes", carburantes);
         }
         return result;
+    }
+
+    /**
+     * Valida y formatea una fecha al formato "dd/MM/yy HH:mm".
+     *
+     * @param rawDate Fecha original como String.
+     * @return Fecha formateada o null si no es válida.
+     */
+    private static String formatFecha(String rawDate) {
+        if (rawDate == null || rawDate.isEmpty()) {
+            return null;
+        }
+        try {
+            return outputDateFormat.format(inputDateFormat.parse(rawDate));
+        } catch (ParseException e) {
+            log.error("Formato de fecha inválido: " + rawDate + " - " + e.getMessage());
+            return null;
+        }
     }
 }
