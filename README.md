@@ -62,10 +62,6 @@
 	8.4. Generar el archivo "estaciones_bulk_raw.jsonl" con todas las estaciones
 	para su implementación en EslasticSearch
 
-	8.5. Realizar consultas en la BBDD MySQL y MongoDB para comparar los resultados.
-
-
-
 ### Uso de ElasticSearch:
 	* Se ha creado un clúster en bonsai.io a través de una cuenta compartida por el grupo
 	de trabajo
