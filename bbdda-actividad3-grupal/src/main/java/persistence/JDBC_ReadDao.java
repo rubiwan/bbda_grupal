@@ -91,38 +91,6 @@ public class JDBC_ReadDao implements IReadDao {
         }
     }
 
-
-    /*
-
-    @Override
-    public void selectEmpresas(String query) throws PersistenceException {
-
-       try (Statement stmt = connection.createStatement();
-                  ResultSet rs = stmt.executeQuery(query))  {
-
-            Gson gson = new Gson();
-
-            while (rs.next()) {
-                if (rs.getObject("id_empresa") == null) {
-                    log.warn("Salta la petrolera con id_empresa nulo o nombre_empresa nulo"
-                            + rs.getInt("id_empresa"));
-                    continue;
-                }
-
-                JsonObject petrolera = buildPetroleraJson(rs, gson);
-
-                String filePath = "src/main/resources/json/empresas/";
-                String fileName = filePath + "empresa_" + rs.getInt("id_empresa") + ".json";
-                writeJsonToFile(petrolera, fileName);
-
-                log.info("JSON creado: {}", fileName);
-            }
-        } catch (SQLException e) {
-           log.error("Error en acceso a la base de datos: {}", query, e);
-           throw new PersistenceException("Error en acceso a la base de datos", e);
-       }
-    }
-*/
     /**
      * Realiza una consulta a la base de datos para obtener todos los carburantes.
      *
@@ -195,11 +163,7 @@ public class JDBC_ReadDao implements IReadDao {
             Gson gson = new Gson();
 
             while (rs.next()) {
-                if (rs.getObject("id_localidad") == null) {
-                    log.warn("Salta la ubicación con id_localidad nulo"
-                            + rs.getString("id_localidad"));
-                    continue;
-                }
+                if (rs.getObject("id_localidad") == null) continue;
                 int idLocalidadTemporal = rs.getInt("id_localidad");
 
                 JsonObject ubicacion = buildUbicacionJson(rs, gson);
