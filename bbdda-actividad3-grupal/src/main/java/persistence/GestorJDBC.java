@@ -9,7 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.sql.Connection;
 
 /**
- * Clase que gestiona las operaciones de lectura y escritura en la base de datos MySQL.
+ * Clase que gestiona las operaciones de lectura y escritura en
+ * las bases de datos.
  *
  * @version 1.0 - 2025-01-17
  * @author Emilio, Anabel, Minerva
