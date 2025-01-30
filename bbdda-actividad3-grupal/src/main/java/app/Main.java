@@ -53,16 +53,16 @@ public class Main {
                 new Main(connection);
 
                 //Inyectar datos en la BBDD MySQL desde ficheros CSV.
-//                insertAll();
+                insertAll();
 
                 //Descargar los datos de la BBDD Mysql y almacenarlos en archivos JSON.
                 selectAll();
 
                 //Inyectar datos en la BBDD MongoDB desde los archivos JSON.
-//                insertAllJson();
+                insertAllJson();
 
                 //Generar el archivo JSONL con todas las estaciones para su implementación en EslasticSearch
-//                JsonToElasticBulk.combineJsonFiles();
+                JsonToElasticBulk.combineJsonFiles();
             } catch (Exception e) {
                 System.out.println("Error al inicializar el sistema: " + e.getMessage());
                 log.error("Error al inicializar el sistema", e);

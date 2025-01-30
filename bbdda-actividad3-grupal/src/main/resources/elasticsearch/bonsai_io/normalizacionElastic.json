@@ -1,0 +1,25 @@
+  {
+    "tipo":"Terrestre",
+    "margen":"D",
+    "horario":"L-V: 07:00-21:00; S-D: 09:00-14:00",
+    "ubicacion": {
+      "direccion":"AVENIDA PAIS VALENCIA, 34",
+      "municipio":"ONDA",
+      "localidad":"ONDA",
+      "codigo_postal":"12200",
+      "provincia":"CASTELLÓN / CASTELLÓ",
+      "coordenadas": {
+        "lat":39.965333,
+        "lon":-0.260417}
+    },
+    "empresa": {
+      "empresa":"CEPSA"
+    },
+    "carburantes": [
+      {
+        "carburante":"gasóleo Premium",
+        "precio":1.558,
+        "fecha_actualizacion":"16/11/24 00:00"
+      }
+    ]
+  }
