@@ -43,8 +43,11 @@ public class GestorJDBC {
     }
 
 
-    //todas las operaciones de persistencia deberian hacerse en esta clase
-
+    /**
+    * Método que inserta todos los archivos JSon en MongoDB
+    *
+    * @param folderPath, collectionName : String
+    */
     public void insertAllJson(String folderPath, String collectionName) throws PersistenceException, LogicException {
         try {
             mongoWrite.insertarJsonEnBatches(folderPath, collectionName);
